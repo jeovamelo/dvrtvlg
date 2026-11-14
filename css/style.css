@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    DVR TV - Estilos para Smart TVs (LG webOS / Samsung) e PC (1080p Nativo)
    ========================================================================== */
 
@@ -584,7 +584,6 @@ html, body {
 /* DESTAQUE LUMINOSO EM AZUL PARA TV E PC */
 .modal-input:focus,
 .modal-input.focused-setting,
-.btn-toggle-pwd.focused-setting,
 .btn-accordion.focused-setting,
 .modal-btn.focused-setting {
     border-color: #00d2ff !important;
@@ -593,38 +592,10 @@ html, body {
     outline: none;
 }
 
-.password-group {
-    display: flex;
-    gap: 10px;
-}
-
-.password-group .modal-input {
-    flex: 1;
-}
-
-.btn-toggle-pwd {
-    background: #1e293b;
-    border: 2px solid #334155;
-    color: #e2e8f0;
-    padding: 0 16px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-}
-
-.btn-toggle-pwd:hover {
-    background: #334155;
-}
-
 .input-hint {
-    font-size: 12px;
+    font-size: 13px;
     color: #94a3b8;
+    line-height: 1.4;
 }
 
 /* Accordion de Configurações Avançadas */

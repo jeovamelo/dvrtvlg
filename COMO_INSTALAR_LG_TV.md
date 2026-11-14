@@ -98,7 +98,7 @@ npx -p @webos-tools/cli ares-launch -d lgtv com.dvr.tv
 Pressionando a **Tecla Azul** no controle ou clicando no botão **⚙️ Configurações** no topo direito:
 1. **Endereço IP:** Altere o IP do seu DVR (ex: `192.168.100.2`).
 2. **Usuário:** Nome de usuário (ex: `admin`).
-3. **Senha:** Campo com botão **👁️ Exibir/Ocultar Senha**.
+3. **Senha:** Campo protegido internamente. Por segurança, a senha configurada **não é exibida na tela** (para manter a senha salva, basta deixar o campo em branco). Digite apenas caso deseje alterá-la.
 4. **Configurações Avançadas (Expansível):**
    - Porta HTTP / Web (Padrão: `80`).
    - Porta RTSP (Padrão: `554`).

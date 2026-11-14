@@ -1,4 +1,4 @@
-﻿# 📹 DVR TV - Aplicativo para LG Smart TV (webOS) e Samsung Smart TV
+# 📹 DVR TV - Aplicativo para LG Smart TV (webOS) e Samsung Smart TV
 
 Aplicativo nativo para **LG Smart TV (webOS)** e **Samsung Smart TV (Tizen)** projetado para monitoramento em tempo real das câmeras do DVR Hikvision com layout em grade 4x4 (16 câmeras simultâneas), visualização em tela cheia e painel interativo de configurações na tela.
 
@@ -54,7 +54,7 @@ Aplicativo nativo para **LG Smart TV (webOS)** e **Samsung Smart TV (Tizen)** pr
    - Mapeamento da tecla **Voltar do controle LG (Keycode 461)** e suporte total ao cursor do **Magic Remote**.
 2. **Modal Interativo de Configurações na Tela:**
    - Abertura direta pela **Tecla Azul** no controle ou pelo ícone **⚙️ Configurações** no cabeçalho.
-   - Campos: **IP do DVR**, **Usuário** e **Senha** com botão **👁️ Exibir/Ocultar Senha**.
+   - Campos: **IP do DVR**, **Usuário** e **Senha protegida** (salva internamente e nunca exposta em tela para terceiros). Deixe em branco para preservar a senha atual.
    - Seção **Configurações Avançadas** expansível (Accordion) para ajustar **Porta HTTP** e **Porta RTSP**.
    - Botões de ação: **💾 Salvar e Reconectar**, **🔄 Restaurar Padrões** e **✖ Cancelar / Fechar**.
    - Destaque luminoso azul (`#00d2ff`) ao navegar pelos campos com as setas do controle.

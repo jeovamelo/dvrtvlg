@@ -25,8 +25,8 @@ class DvrTvApp {
         // Estado do Modal de Configurações
         this.isSettingsOpen = false;
         this.isAdvancedOpen = false;
-        this.isPasswordVisible = false;
         this.settingsFocusedIndex = 0;
+        this.resetPasswordPending = null;
 
         this.gridRefreshTimer = null;
         this.player = null;
@@ -159,12 +159,6 @@ class DvrTvApp {
             btnCloseX.addEventListener('click', function() { self.closeSettings(); });
         }
 
-        // Alternar Senha (Exibir / Ocultar)
-        var btnTogglePwd = document.getElementById('btn-toggle-pwd');
-        if (btnTogglePwd) {
-            btnTogglePwd.addEventListener('click', function() { self.togglePassword(); });
-        }
-
         // Accordion Avançado
         var btnToggleAdv = document.getElementById('btn-toggle-advanced');
         if (btnToggleAdv) {
@@ -201,7 +195,6 @@ class DvrTvApp {
             document.getElementById('cfg-dvr-ip'),
             document.getElementById('cfg-dvr-user'),
             document.getElementById('cfg-dvr-pwd'),
-            document.getElementById('btn-toggle-pwd'),
             document.getElementById('btn-toggle-advanced')
         ];
 
@@ -220,6 +213,7 @@ class DvrTvApp {
     openSettings() {
         console.log('[App] Abrindo Modal de Configurações...');
         this.isSettingsOpen = true;
+        this.resetPasswordPending = null;
 
         var modal = document.getElementById('settings-modal');
         if (modal) {
@@ -235,7 +229,16 @@ class DvrTvApp {
 
         if (ipInput) ipInput.value = localStorage.getItem('dvr_ip') || this.dvr.ip;
         if (userInput) userInput.value = localStorage.getItem('dvr_user') || this.dvr.username;
-        if (pwdInput) pwdInput.value = localStorage.getItem('dvr_pwd') || this.dvr.password;
+
+        // Por segurança, a senha configurada NUNCA é colocada no campo em texto aberto
+        if (pwdInput) {
+            pwdInput.value = '';
+            var hasSavedPwd = !!(localStorage.getItem('dvr_pwd') || this.dvr.password);
+            pwdInput.placeholder = hasSavedPwd 
+                ? '•••••••• (Senha salva - digite para alterar)' 
+                : 'Digite a senha do DVR';
+        }
+
         if (httpInput) httpInput.value = localStorage.getItem('dvr_http_port') || this.dvr.httpPort;
         if (rtspInput) rtspInput.value = localStorage.getItem('dvr_rtsp_port') || this.dvr.rtspPort;
 
@@ -257,23 +260,6 @@ class DvrTvApp {
         }
 
         this.updateCardFocus();
-    }
-
-    togglePassword() {
-        this.isPasswordVisible = !this.isPasswordVisible;
-        var pwdInput = document.getElementById('cfg-dvr-pwd');
-        var iconEl = document.getElementById('pwd-toggle-icon');
-        var textEl = document.getElementById('pwd-toggle-text');
-
-        if (pwdInput) {
-            pwdInput.type = this.isPasswordVisible ? 'text' : 'password';
-        }
-        if (iconEl) {
-            iconEl.textContent = this.isPasswordVisible ? '🙈' : '👁️';
-        }
-        if (textEl) {
-            textEl.textContent = this.isPasswordVisible ? 'Ocultar' : 'Exibir';
-        }
     }
 
     toggleAdvanced() {
@@ -304,7 +290,22 @@ class DvrTvApp {
 
         var newIp = (ipInput && ipInput.value) ? ipInput.value.trim() : '192.168.100.2';
         var newUser = (userInput && userInput.value) ? userInput.value.trim() : 'admin';
-        var newPwd = (pwdInput && pwdInput.value) ? pwdInput.value : 'jr130182';
+
+        // Lógica de Segurança da Senha:
+        // Se o usuário digitou uma nova senha, usa a nova.
+        // Se foi clicado em 'Restaurar Padrões', usa a padrão.
+        // Se o campo foi deixado vazio, mantém a senha atual salva internamente!
+        var currentSavedPwd = localStorage.getItem('dvr_pwd') || this.dvr.password || 'jr130182';
+        var enteredPwd = (pwdInput && pwdInput.value) ? pwdInput.value : '';
+        var newPwd = currentSavedPwd;
+
+        if (enteredPwd.length > 0) {
+            newPwd = enteredPwd;
+        } else if (this.resetPasswordPending) {
+            newPwd = this.resetPasswordPending;
+        }
+        this.resetPasswordPending = null;
+
         var newHttp = (httpInput && httpInput.value) ? parseInt(httpInput.value, 10) : 80;
         var newRtsp = (rtspInput && rtspInput.value) ? parseInt(rtspInput.value, 10) : 554;
 
@@ -327,6 +328,12 @@ class DvrTvApp {
             rtspPort: newRtsp
         });
 
+        // Limpa o valor digitado do campo por segurança
+        if (pwdInput) {
+            pwdInput.value = '';
+            pwdInput.placeholder = '•••••••• (Senha salva - digite para alterar)';
+        }
+
         this.closeSettings();
         this.showToast('Configurações salvas! Reconectando...', 3000);
         this.connectDvr();
@@ -341,7 +348,14 @@ class DvrTvApp {
 
         if (ipInput) ipInput.value = '192.168.100.2';
         if (userInput) userInput.value = 'admin';
-        if (pwdInput) pwdInput.value = 'jr130182';
+
+        // Por segurança, não expõe a senha nem na restauração
+        if (pwdInput) {
+            pwdInput.value = '';
+            pwdInput.placeholder = '•••••••• (Padrão restaurado - digite para alterar)';
+        }
+        this.resetPasswordPending = 'jr130182';
+
         if (httpInput) httpInput.value = '80';
         if (rtspInput) rtspInput.value = '554';
 
