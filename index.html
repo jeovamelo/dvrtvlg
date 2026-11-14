@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0, user-scalable=no">
+    <title>DVR TV - LG webOS Smart TV</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Cabeçalho Superior -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="app-logo">TV</div>
+            <h1 id="dvr-title" class="dvr-title">DVR01Casa • iDS-7216HQHI-M1/XT</h1>
+            <div class="connection-status">
+                <span id="status-dot" class="status-dot connecting"></span>
+                <span id="status-label">Conectando...</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="btn-header-settings" class="btn-header-settings" title="Abrir Configurações (Tecla Azul no Controle ou Clique)" tabindex="0">
+                <span class="settings-gear-icon">⚙️</span>
+                <span class="settings-header-label">Configurações</span>
+            </button>
+            <div class="clock-widget">
+                <div id="clock-time" class="clock-time">--:--:--</div>
+                <div id="clock-date" class="clock-date">--</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área Principal de Exibição (Grade de Câmeras) -->
+    <main class="main-container">
+        <div id="camera-grid" class="camera-grid layout-4x4">
+            <!-- Os cards de câmeras são gerados dinamicamente via app.js -->
+        </div>
+    </main>
+
+    <!-- Visualização em Tela Cheia (Player de Vídeo) -->
+    <div id="fullscreen-view" class="fullscreen-view">
+        <div id="fullscreen-player-container" class="fullscreen-player-container">
+            <!-- Player HTML5 / Fallback -->
+            <div id="player-loader" class="player-loader">
+                <div class="spinner"></div>
+                <span>Carregando transmissão ao vivo...</span>
+            </div>
+        </div>
+        <div class="fs-overlay-header">
+            <h2 id="fs-cam-title" class="fs-cam-title">Camera 01</h2>
+            <div class="fs-badges">
+                <span class="fs-live-badge">AO VIVO</span>
+                <span id="fs-cam-badge" class="fs-quality-badge">STREAM HD 1080P</span>
+            </div>
+        </div>
+        <div class="fs-overlay-footer">
+            <span><span class="fs-hint-key">OK / VOLTAR</span> Retornar à Grade</span>
+            <span><span class="fs-hint-key">CH ▲ / ▼</span> Trocar Câmera</span>
+            <span><span class="fs-hint-key">AMARELO</span> Alternar HD / Fluido</span>
+        </div>
+    </div>
+
+    <!-- Modal de Configurações do DVR (Otimizado para Smart TV e PC) -->
+    <div id="settings-modal" class="settings-modal" style="display: none;">
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">⚙️</span>
+                    <h2>Configurações do DVR</h2>
+                </div>
+                <button id="btn-modal-close-x" class="modal-close-x" title="Fechar (Voltar / Esc)" tabindex="0">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Seção Básica -->
+                <div class="form-section">
+                    <h3 class="section-title">Dados de Conexão</h3>
+                    
+                    <div class="form-group">
+                        <label for="cfg-dvr-ip">Endereço IP do DVR:</label>
+                        <input id="cfg-dvr-ip" class="modal-input" type="text" placeholder="Ex: 192.168.100.2" autocomplete="off" spellcheck="false">
+                        <span class="input-hint">IP local do DVR na rede</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cfg-dvr-user">Usuário:</label>
+                        <input id="cfg-dvr-user" class="modal-input" type="text" placeholder="Ex: admin" autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cfg-dvr-pwd">Senha do DVR:</label>
+                        <div class="password-group">
+                            <input id="cfg-dvr-pwd" class="modal-input" type="password" placeholder="Senha do DVR" autocomplete="off">
+                            <button id="btn-toggle-pwd" class="btn-toggle-pwd" type="button" tabindex="0">
+                                <span id="pwd-toggle-icon">👁️</span>
+                                <span id="pwd-toggle-text">Exibir</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção Avançada (Accordion Expansível) -->
+                <div class="form-section advanced-section">
+                    <button id="btn-toggle-advanced" class="btn-accordion" type="button" tabindex="0">
+                        <span class="accordion-title">⚙️ Configurações Avançadas</span>
+                        <span id="accordion-arrow" class="accordion-arrow">▼</span>
+                    </button>
+                    
+                    <div id="advanced-settings-panel" class="advanced-panel" style="display: none;">
+                        <div class="form-group">
+                            <label for="cfg-dvr-http-port">Porta HTTP / Web:</label>
+                            <input id="cfg-dvr-http-port" class="modal-input" type="number" placeholder="80" min="1" max="65535">
+                            <span class="input-hint">Padrão Hikvision: 80</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cfg-dvr-rtsp-port">Porta RTSP (Streaming):</label>
+                            <input id="cfg-dvr-rtsp-port" class="modal-input" type="number" placeholder="554" min="1" max="65535">
+                            <span class="input-hint">Padrão RTSP: 554</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação na base -->
+            <div class="modal-footer">
+                <button id="btn-save-settings" class="modal-btn btn-save" tabindex="0">
+                    💾 Salvar e Reconectar
+                </button>
+                <button id="btn-reset-settings" class="modal-btn btn-reset" tabindex="0">
+                    🔄 Restaurar Padrões
+                </button>
+                <button id="btn-close-settings" class="modal-btn btn-cancel" tabindex="0">
+                    ✖ Cancelar / Fechar
+                </button>
+            </div>
+            
+            <div class="modal-remote-hint">
+                <span>Dica: Use <b>▲ ▼</b> para navegar, <b>OK</b> para selecionar/digitar, e <b>VOLTAR (ou Azul)</b> para fechar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé com Legenda dos Botões do Controle Remoto -->
+    <footer class="remote-legend-footer">
+        <div class="legend-item">
+            <span class="key-badge">▲ ▼ ◄ ►</span>
+            <span>Navegar</span>
+        </div>
+        <div class="legend-item">
+            <span class="key-badge">OK</span>
+            <span>Tela Cheia</span>
+        </div>
+        <div class="legend-item">
+            <span class="btn-pill red"></span>
+            <span>Reconectar</span>
+        </div>
+        <div class="legend-item">
+            <span class="btn-pill green"></span>
+            <span>Mudar Grade</span>
+        </div>
+        <div class="legend-item">
+            <span class="btn-pill yellow"></span>
+            <span>HD / Fluido</span>
+        </div>
+        <div class="legend-item">
+            <span class="btn-pill blue"></span>
+            <span>Configurações</span>
+        </div>
+        <div class="legend-item">
+            <span class="key-badge">0-9</span>
+            <span>Canal Direto</span>
+        </div>
+    </footer>
+
+    <!-- Toast de Notificação -->
+    <div id="toast-notification" class="toast-notification"></div>
+
+    <!-- Scripts da Aplicação -->
+    <script src="js/sha256.js"></script>
+    <script src="js/dvr-api.js"></script>
+    <script src="js/avplayer.js"></script>
+    <script src="js/remote-keys.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
