@@ -36,6 +36,7 @@ class DvrTvApp {
     }
 
     async init() {
+        document.title = 'DVR TV - LG webOS Smart TV';
         console.log('[App] Inicializando DVR TV App (LG webOS / Smart TV)...');
         this.startClock();
         this.setupDOM();

@@ -5,7 +5,7 @@ $listener.Prefixes.Add("http://127.0.0.1:$port/")
 $listener.Start()
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host " Servidor de Teste DVR TV no Computador" -ForegroundColor Green
+Write-Host " Servidor de Teste DVR TV no Computador (LG webOS / PC)" -ForegroundColor Green
 Write-Host " Acesse no seu navegador: http://localhost:8080/" -ForegroundColor Yellow
 Write-Host " Pressione Ctrl+C para encerrar" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
