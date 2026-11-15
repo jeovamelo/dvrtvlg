@@ -155,10 +155,10 @@ class TvStreamPlayer {
     }
 
     /**
-     * Fallback de vídeo contínuo via snapshots ISAPI periódicos (100% estável)
+     * Streaming contínuo via snapshots periódicos em alta taxa de quadros (FPS Turbo)
      */
     async playFallback(channelId, streamType) {
-        console.log('[Player] Executando streaming via snapshots periódicos (Fallback)');
+        console.log('[Player] Executando streaming contínuo de alta taxa (Modo Turbo FPS)');
         if (this.videoEl) {
             this.videoEl.style.display = 'none';
         }
@@ -167,9 +167,12 @@ class TvStreamPlayer {
 
         var self = this;
         var lastBlobUrl = null;
+        var inFlight = false;
 
         var updateFrame = async function() {
             if (!self.isPlaying || self.currentChannelId !== channelId) return;
+            if (inFlight) return;
+            inFlight = true;
 
             try {
                 var newBlobUrl = await self.dvrClient.fetchSnapshotBlob(channelId, streamType);
@@ -183,11 +186,16 @@ class TvStreamPlayer {
                     URL.revokeObjectURL(newBlobUrl);
                 }
             } catch (err) {
-                // Erro temporário de rede
+                // Erro transitório de rede
+            } finally {
+                inFlight = false;
             }
 
             if (self.isPlaying && self.currentChannelId === channelId) {
-                self.fallbackTimer = setTimeout(updateFrame, 500);
+                // Intervalo mínimo para máxima taxa de quadros (FPS):
+                // 10ms para Sub-stream Fluido (~15-25 FPS) e 50ms para HD
+                var delay = (streamType === 1) ? 50 : 10;
+                self.fallbackTimer = setTimeout(updateFrame, delay);
             }
         };
 

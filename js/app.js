@@ -20,7 +20,7 @@ class DvrTvApp {
         this.isHeaderFocused = false;
         this.isFullScreen = false;
         this.fullScreenChannel = null;
-        this.streamQuality = 1; // 1 = HD (1080P), 2 = Fluido
+        this.streamQuality = 2; // Padrão: 2 = Sub-stream Fluido (Alta taxa de quadros / FPS)
 
         // Estado do Modal de Configurações
         this.isSettingsOpen = false;
@@ -681,7 +681,7 @@ class DvrTvApp {
         if (this.gridRefreshTimer) clearInterval(this.gridRefreshTimer);
         var self = this;
 
-        // Atualiza os snapshots da grade a cada 3 segundos
+        // Atualiza os snapshots da grade a cada 1.2 segundos para maior dinamismo
         this.gridRefreshTimer = setInterval(function() {
             if (self.isFullScreen || self.isSettingsOpen) return;
             var visibleChannels = self.getVisibleChannels();
@@ -694,7 +694,7 @@ class DvrTvApp {
                     }
                 }
             });
-        }, 3000);
+        }, 1200);
     }
 
     // =========================================================================
