@@ -36,37 +36,32 @@
         </div>
     </main>
 
-    <!-- Visualização em Câmera Individual / Destaque -->
+    <!-- Visualização em Câmera Individual / Destaque (Padrão Widescreen Idêntico à Samsung) -->
     <div id="fullscreen-view" class="fullscreen-view">
-        <!-- Palco da Câmera (Imagem centralizada, menor, 16:9 proporcional, sem ficar atrás do menu) -->
+        <!-- Palco da Câmera (Preenche a tela de ponta a ponta sem faixas pretas laterais) -->
         <div class="single-camera-stage">
             <div id="fullscreen-player-container" class="fullscreen-player-container">
                 <!-- Player HTML5 / Fallback -->
                 <div id="player-loader" class="player-loader">
                     <div class="spinner"></div>
-                    <span>Carregando câmera...</span>
+                    <span>Carregando transmissão ao vivo...</span>
                 </div>
             </div>
         </div>
 
-        <!-- Barra Inferior Discreta (Fica estritamente ABAIXO da imagem) -->
+        <!-- Barra Inferior Slim (38px, itens todos em linha horizontal única) -->
         <div class="single-camera-bottom-bar">
-            <!-- Informações da Câmera: Nome da Camera (CH X), e logo abaixo o modo com cores distintas -->
-            <div class="single-camera-info">
-                <div id="fs-cam-title" class="single-cam-title">Camera 01 (CH 1)</div>
-                <div class="single-cam-subline">
-                    <span id="fs-cam-badge" class="fs-quality-badge quality-fluido">● Fluido</span>
-                </div>
-            </div>
+            <!-- Esquerda: Nome e Canal da Câmera em linha única -->
+            <div id="fs-cam-title" class="single-cam-title">Camera 01 (CH 1)</div>
 
-            <!-- Atalhos Discretos de Navegação -->
+            <!-- Direita: Legendas e Indicador Fluido/HD posicionado depois das legendas -->
             <div class="single-camera-actions">
                 <div class="sc-action-item">
-                    <span class="fs-hint-key">VOLTAR</span>
+                    <span class="fs-hint-key">OK / VOLTAR</span>
                     <span>Grade</span>
                 </div>
                 <div class="sc-action-item">
-                    <span class="fs-hint-key">◄ ►</span>
+                    <span class="fs-hint-key">CH ▲ / ▼</span>
                     <span>Trocar Câmera</span>
                 </div>
                 <div class="sc-action-item">
@@ -75,8 +70,10 @@
                 </div>
                 <div class="sc-action-item">
                     <span class="fs-hint-key">AMARELO</span>
-                    <span>HD / Fluido</span>
+                    <span>Alternar Fluido / HD</span>
                 </div>
+                <!-- Indicador Fluido ou HD posicionado depois das legendas à direita -->
+                <span id="fs-cam-badge" class="fs-quality-badge quality-fluido">● Fluido</span>
             </div>
         </div>
     </div>
