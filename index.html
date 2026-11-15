@@ -49,12 +49,15 @@
             </div>
         </div>
 
-        <!-- Barra Inferior Slim (38px, itens todos em linha horizontal única) -->
+        <!-- Barra Inferior Slim (Idêntica à Samsung) -->
         <div class="single-camera-bottom-bar">
-            <!-- Esquerda: Nome e Canal da Câmera em linha única -->
-            <div id="fs-cam-title" class="single-cam-title">Camera 01 (CH 1)</div>
+            <!-- Esquerda: Nome e Canal da Câmera + Badge Fluido/HD juntos -->
+            <div class="single-camera-left">
+                <span id="fs-cam-title" class="single-cam-title">Camera 01 (CH 1)</span>
+                <span id="fs-cam-badge" class="fs-quality-badge quality-fluido">● Fluido</span>
+            </div>
 
-            <!-- Direita: Legendas e Indicador Fluido/HD posicionado depois das legendas -->
+            <!-- Direita: Exatamente os 3 atalhos da foto de referência -->
             <div class="single-camera-actions">
                 <div class="sc-action-item">
                     <span class="fs-hint-key">OK / VOLTAR</span>
@@ -65,15 +68,9 @@
                     <span>Trocar Câmera</span>
                 </div>
                 <div class="sc-action-item">
-                    <span class="fs-hint-key">0-9</span>
-                    <span>Canal Direto</span>
-                </div>
-                <div class="sc-action-item">
                     <span class="btn-pill yellow"></span>
                     <span>Alternar Fluido / HD</span>
                 </div>
-                <!-- Indicador Fluido ou HD posicionado depois das legendas à direita -->
-                <span id="fs-cam-badge" class="fs-quality-badge quality-fluido">● Fluido</span>
             </div>
         </div>
     </div>

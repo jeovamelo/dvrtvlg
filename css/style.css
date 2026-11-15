@@ -365,11 +365,11 @@ html, body {
     display: block;
 }
 
-/* Menu / Barra Inferior Slim: 38px, todos os itens sempre um ao lado do outro */
+/* Menu / Barra Inferior Slim: 36px, idêntico à imagem de referência Samsung */
 .single-camera-bottom-bar {
-    height: 38px;
-    min-height: 38px;
-    background: #0c1017;
+    height: 36px;
+    min-height: 36px;
+    background: #080c14;
     border-top: 1px solid #1e293b;
     display: flex;
     align-items: center;
@@ -379,20 +379,40 @@ html, body {
     z-index: 10;
 }
 
-/* Nome da Câmera (Esquerda, linha única) */
+/* Lado Esquerdo: Nome da Câmera e Badge alinhados lado a lado */
+.single-camera-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
 .single-cam-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #f8fafc;
     letter-spacing: 0.3px;
     white-space: nowrap;
 }
 
-/* Atalhos e Indicador posicionado à direita em linha horizontal única */
+/* Indicador de Modo com Cores Diferenciadas (Ao lado do Nome) */
+.fs-quality-badge {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 1px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+/* Lado Direito: Exatamente os 3 atalhos em linha horizontal única */
 .single-camera-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
     white-space: nowrap;
 }
 
@@ -406,8 +426,8 @@ html, body {
 }
 
 .sc-action-item .btn-pill.yellow {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
     background-color: #facc15;
     box-shadow: 0 0 8px rgba(250, 204, 21, 0.7);
     border-radius: 50%;
@@ -423,19 +443,6 @@ html, body {
     font-size: 11px;
     font-weight: 700;
     color: #38bdf8;
-}
-
-/* Indicador de Modo com Cores Diferenciadas (À direita das legendas) */
-.fs-quality-badge {
-    font-size: 11px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
 }
 
 /* 🟢 ● Fluido: Verde Esmeralda com ponto luminoso */
