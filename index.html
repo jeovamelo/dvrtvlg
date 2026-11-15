@@ -36,27 +36,48 @@
         </div>
     </main>
 
-    <!-- Visualização em Tela Cheia (Player de Vídeo) -->
+    <!-- Visualização em Câmera Individual / Destaque -->
     <div id="fullscreen-view" class="fullscreen-view">
-        <div id="fullscreen-player-container" class="fullscreen-player-container">
-            <!-- Player HTML5 / Fallback -->
-            <div id="player-loader" class="player-loader">
-                <div class="spinner"></div>
-                <span>Carregando transmissão ao vivo...</span>
+        <!-- Palco da Câmera (Imagem centralizada, menor, 16:9 proporcional, sem ficar atrás do menu) -->
+        <div class="single-camera-stage">
+            <div id="fullscreen-player-container" class="fullscreen-player-container">
+                <!-- Player HTML5 / Fallback -->
+                <div id="player-loader" class="player-loader">
+                    <div class="spinner"></div>
+                    <span>Carregando câmera...</span>
+                </div>
             </div>
         </div>
-        <div class="fs-overlay-header">
-            <h2 id="fs-cam-title" class="fs-cam-title">Camera 01</h2>
-            <div class="fs-badges">
-                <span class="fs-live-badge">AO VIVO</span>
-                <span id="fs-cam-badge" class="fs-quality-badge">STREAM HD 1080P</span>
+
+        <!-- Barra Inferior Discreta (Fica estritamente ABAIXO da imagem) -->
+        <div class="single-camera-bottom-bar">
+            <!-- Informações da Câmera: CH + Nome, e logo abaixo a qualidade (Fluido ou HD) em cores distintas -->
+            <div class="single-camera-info">
+                <div id="fs-cam-title" class="single-cam-title">CH01 • Camera 01</div>
+                <div class="single-cam-subline">
+                    <span id="fs-cam-badge" class="fs-quality-badge quality-fluido">Fluido</span>
+                </div>
             </div>
-        </div>
-        <div class="fs-overlay-footer">
-            <span><span class="fs-hint-key">VOLTAR</span> Retornar à Grade</span>
-            <span><span class="fs-hint-key">◄ ► ou ▲ ▼</span> Trocar Câmera</span>
-            <span><span class="fs-hint-key">0-9</span> Canal Direto (1 a 16)</span>
-            <span><span class="fs-hint-key">AMARELO</span> HD / Fluido</span>
+
+            <!-- Atalhos Discretos de Navegação -->
+            <div class="single-camera-actions">
+                <div class="sc-action-item">
+                    <span class="fs-hint-key">VOLTAR</span>
+                    <span>Grade</span>
+                </div>
+                <div class="sc-action-item">
+                    <span class="fs-hint-key">◄ ►</span>
+                    <span>Trocar Câmera</span>
+                </div>
+                <div class="sc-action-item">
+                    <span class="fs-hint-key">0-9</span>
+                    <span>Canal Direto</span>
+                </div>
+                <div class="sc-action-item">
+                    <span class="fs-hint-key">AMARELO</span>
+                    <span>HD / Fluido</span>
+                </div>
+            </div>
         </div>
     </div>
 

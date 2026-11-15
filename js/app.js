@@ -583,11 +583,20 @@ class DvrTvApp {
     handleYellow() {
         if (this.isSettingsOpen) return;
         this.streamQuality = (this.streamQuality === 1) ? 2 : 1;
-        var qualityName = (this.streamQuality === 1) ? 'Stream Principal (HD 1080P)' : 'Sub-stream (Rápido/Fluido)';
-        this.showToast('Qualidade: ' + qualityName, 2500);
+        var qualityName = (this.streamQuality === 1) ? 'HD' : 'Fluido';
+        this.showToast('Qualidade: ' + qualityName, 1800);
 
         if (this.isFullScreen && this.fullScreenChannel) {
-            document.getElementById('fs-cam-badge').textContent = (this.streamQuality === 1) ? 'STREAM HD 1080P' : 'SUB-STREAM FLUIDO';
+            var badgeEl = document.getElementById('fs-cam-badge');
+            if (badgeEl) {
+                if (this.streamQuality === 1) {
+                    badgeEl.textContent = 'HD';
+                    badgeEl.className = 'fs-quality-badge quality-hd';
+                } else {
+                    badgeEl.textContent = 'Fluido';
+                    badgeEl.className = 'fs-quality-badge quality-fluido';
+                }
+            }
             this.player.play(this.fullScreenChannel.id, this.streamQuality);
         }
     }
@@ -680,7 +689,7 @@ class DvrTvApp {
                 this.updateCardFocus();
             }
             this.openFullScreen(target);
-            this.showToast('Canal ' + (channelNum < 10 ? '0' + channelNum : channelNum) + ' • ' + target.name, 2500);
+            this.showToast('CH' + (channelNum < 10 ? '0' + channelNum : channelNum) + ' • ' + target.name, 2000);
         } else {
             this.showToast('Canal ' + channelNum + ' não disponível (Canais: 1 a 16)', 3000);
         }
@@ -823,20 +832,31 @@ class DvrTvApp {
     // Tela Cheia
     // =========================================================================
     openFullScreen(channel) {
-        console.log('[App] Abrindo câmera em tela cheia:', channel.name);
+        console.log('[App] Abrindo câmera individual:', channel.name);
         this.isFullScreen = true;
         this.fullScreenChannel = channel;
 
         var fsView = document.getElementById('fullscreen-view');
-        if (fsView) fsView.style.display = 'block';
+        if (fsView) fsView.style.display = 'flex';
 
+        var chId = channel.id < 10 ? '0' + channel.id : channel.id;
         var titleEl = document.getElementById('fs-cam-title');
         var badgeEl = document.getElementById('fs-cam-badge');
-        if (titleEl) titleEl.textContent = channel.name + ' (Canal ' + channel.id + ')';
-        if (badgeEl) badgeEl.textContent = (this.streamQuality === 1) ? 'STREAM HD 1080P' : 'SUB-STREAM FLUIDO';
+        if (titleEl) {
+            titleEl.textContent = 'CH' + chId + ' • ' + channel.name;
+        }
+        if (badgeEl) {
+            if (this.streamQuality === 1) {
+                badgeEl.textContent = 'HD';
+                badgeEl.className = 'fs-quality-badge quality-hd';
+            } else {
+                badgeEl.textContent = 'Fluido';
+                badgeEl.className = 'fs-quality-badge quality-fluido';
+            }
+        }
 
         this.player.play(channel.id, this.streamQuality);
-        this.showToast(channel.name + ' em Tela Cheia', 2000);
+        this.showToast('CH' + chId + ' • ' + channel.name, 1500);
     }
 
     closeFullScreen() {

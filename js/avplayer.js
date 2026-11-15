@@ -27,7 +27,7 @@ class TvStreamPlayer {
         this.videoEl.className = 'stream-video-element';
         this.videoEl.style.width = '100%';
         this.videoEl.style.height = '100%';
-        this.videoEl.style.objectFit = 'fill';
+        this.videoEl.style.objectFit = 'contain';
         this.videoEl.style.display = 'none';
         this.videoEl.autoplay = true;
         this.videoEl.playsInline = true;
@@ -39,7 +39,7 @@ class TvStreamPlayer {
         this.fallbackImg.className = 'avplay-fallback-img';
         this.fallbackImg.style.width = '100%';
         this.fallbackImg.style.height = '100%';
-        this.fallbackImg.style.objectFit = 'fill';
+        this.fallbackImg.style.objectFit = 'contain';
         this.fallbackImg.style.display = 'none';
         this.fallbackImg.alt = 'Stream Fallback';
         this.container.appendChild(this.fallbackImg);
