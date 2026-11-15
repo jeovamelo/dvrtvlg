@@ -203,15 +203,34 @@ html, body {
     transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
-/* Destaque de Foco para Controle Remoto da TV */
+/* Destaque de Foco Ultra Visível para Controle Remoto da TV */
 .camera-card:focus,
 .camera-card:focus-visible,
 .camera-card.focused {
-    border-color: #00d2ff;
-    box-shadow: 0 0 16px rgba(0, 210, 255, 0.75), inset 0 0 6px rgba(0, 210, 255, 0.4);
-    transform: scale(1.02);
-    z-index: 5;
-    outline: none;
+    border: 3.5px solid #00f0ff !important;
+    box-shadow: 0 0 0 2px #00f0ff, 0 0 26px rgba(0, 240, 255, 0.95), inset 0 0 10px rgba(0, 240, 255, 0.4) !important;
+    transform: scale(1.035) !important;
+    z-index: 50 !important;
+    outline: none !important;
+}
+
+.camera-card.focused .camera-overlay-top {
+    background: #00f0ff !important;
+    color: #000000 !important;
+    border-left: 4px solid #ffffff !important;
+}
+
+.camera-card.focused .cam-badge-id {
+    background: #000000 !important;
+    color: #00f0ff !important;
+    font-weight: 900 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+}
+
+.camera-card.focused .cam-name {
+    color: #000000 !important;
+    font-weight: 800 !important;
 }
 
 .card-video-wrap {
@@ -354,16 +373,16 @@ html, body {
     display: block;
 }
 
-/* Menu / Barra Inferior: Fica estritamente abaixo da imagem */
+/* Menu / Barra Inferior: Fica estritamente abaixo da imagem (54px) */
 .single-camera-bottom-bar {
-    height: 64px;
-    min-height: 64px;
+    height: 54px;
+    min-height: 54px;
     background: linear-gradient(180deg, #0e131f 0%, #0a0d16 100%);
     border-top: 1px solid #1e293b;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 32px;
+    padding: 0 28px;
     box-sizing: border-box;
     z-index: 10;
 }
@@ -372,41 +391,41 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 3px;
+    gap: 2px;
 }
 
 .single-cam-title {
-    font-size: 19px;
+    font-size: 17px;
     font-weight: 700;
     color: #f8fafc;
     letter-spacing: 0.5px;
+    line-height: 1.1;
 }
 
 .single-cam-subline {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* Badges de Qualidade com Cores Distintas abaixo do nome da câmera */
+/* Indicador de Modo com Cores Diferenciadas (Abaixo do Nome) */
 .fs-quality-badge {
     font-size: 11px;
     font-weight: 800;
-    padding: 2px 9px;
+    padding: 1px 8px;
     border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     display: inline-flex;
     align-items: center;
     gap: 5px;
 }
 
-/* Fluido: Verde Esmeralda */
+/* 🟢 ● Fluido: Verde Esmeralda com ponto luminoso */
 .fs-quality-badge.quality-fluido {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.45);
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
 }
 
 .fs-quality-badge.quality-fluido::before {
@@ -414,21 +433,26 @@ html, body {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #34d399;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
 }
 
-/* HD: Azul Ciano */
+/* 🔵 ● HD: Azul Ciano com ponto luminoso */
 .fs-quality-badge.quality-hd {
-    background: rgba(2, 132, 199, 0.2);
-    color: #38bdf8;
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+    background: rgba(2, 132, 199, 0.22);
+    color: #00d2ff;
+    border: 1px solid #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.45);
 }
 
 .fs-quality-badge.quality-hd::before {
     content: '';
     width: 6px;
     height: 6px;
+    border-radius: 50%;
+    background: #00d2ff;
+    box-shadow: 0 0 6px #00d2ff;
+}
     border-radius: 50%;
     background: #38bdf8;
 }

@@ -423,22 +423,28 @@ class DvrTvApp {
             return;
         }
 
-        // Em tela cheia, seta Cima ou Esquerda troca para a câmera anterior
+        // Em tela cheia, seta Cima troca para a câmera anterior
         if (this.isFullScreen) {
             this.prevCamera();
             return;
         }
 
         var visibleChannels = this.getVisibleChannels();
+        if (visibleChannels.length === 0) return;
         var cols = this.getGridColumns();
+
         if (this.focusedIndex - cols >= 0) {
             this.focusedIndex -= cols;
-            this.updateCardFocus();
         } else {
-            // Se estiver na linha superior, sobe para o botão de Configurações
-            this.isHeaderFocused = true;
-            this.updateCardFocus();
+            // Se estiver na linha do topo, navega para a mesma coluna na linha inferior (wrap)
+            var targetIdx = this.focusedIndex;
+            while (targetIdx + cols < visibleChannels.length) {
+                targetIdx += cols;
+            }
+            this.focusedIndex = targetIdx;
         }
+        this.isHeaderFocused = false;
+        this.updateCardFocus();
     }
 
     handleDown() {
@@ -447,24 +453,28 @@ class DvrTvApp {
             return;
         }
 
-        // Em tela cheia, seta Baixo ou Direita troca para a próxima câmera
+        // Em tela cheia, seta Baixo troca para a próxima câmera
         if (this.isFullScreen) {
             this.nextCamera();
             return;
         }
 
-        if (this.isHeaderFocused) {
-            this.isHeaderFocused = false;
-            this.updateCardFocus();
-            return;
-        }
-
         var visibleChannels = this.getVisibleChannels();
+        if (visibleChannels.length === 0) return;
         var cols = this.getGridColumns();
+
         if (this.focusedIndex + cols < visibleChannels.length) {
             this.focusedIndex += cols;
-            this.updateCardFocus();
+        } else {
+            // Se estiver na linha inferior, navega para a mesma coluna na linha superior (wrap)
+            var targetIdx = this.focusedIndex;
+            while (targetIdx - cols >= 0) {
+                targetIdx -= cols;
+            }
+            this.focusedIndex = targetIdx;
         }
+        this.isHeaderFocused = false;
+        this.updateCardFocus();
     }
 
     handleLeft() {
@@ -476,13 +486,17 @@ class DvrTvApp {
             return;
         }
 
-        if (this.isHeaderFocused) return;
-
         var visibleChannels = this.getVisibleChannels();
+        if (visibleChannels.length === 0) return;
+
         if (this.focusedIndex > 0) {
             this.focusedIndex--;
-            this.updateCardFocus();
+        } else {
+            // Se estiver no primeiro card, wrap para o último
+            this.focusedIndex = visibleChannels.length - 1;
         }
+        this.isHeaderFocused = false;
+        this.updateCardFocus();
     }
 
     handleRight() {
@@ -494,13 +508,17 @@ class DvrTvApp {
             return;
         }
 
-        if (this.isHeaderFocused) return;
-
         var visibleChannels = this.getVisibleChannels();
+        if (visibleChannels.length === 0) return;
+
         if (this.focusedIndex < visibleChannels.length - 1) {
             this.focusedIndex++;
-            this.updateCardFocus();
+        } else {
+            // Se estiver no último card, wrap para o primeiro
+            this.focusedIndex = 0;
         }
+        this.isHeaderFocused = false;
+        this.updateCardFocus();
     }
 
     handleEnter() {
@@ -590,10 +608,10 @@ class DvrTvApp {
             var badgeEl = document.getElementById('fs-cam-badge');
             if (badgeEl) {
                 if (this.streamQuality === 1) {
-                    badgeEl.textContent = 'HD';
+                    badgeEl.textContent = '● HD';
                     badgeEl.className = 'fs-quality-badge quality-hd';
                 } else {
-                    badgeEl.textContent = 'Fluido';
+                    badgeEl.textContent = '● Fluido';
                     badgeEl.className = 'fs-quality-badge quality-fluido';
                 }
             }
@@ -689,7 +707,7 @@ class DvrTvApp {
                 this.updateCardFocus();
             }
             this.openFullScreen(target);
-            this.showToast('CH' + (channelNum < 10 ? '0' + channelNum : channelNum) + ' • ' + target.name, 2000);
+            this.showToast(target.name + ' (CH ' + target.id + ')', 2000);
         } else {
             this.showToast('Canal ' + channelNum + ' não disponível (Canais: 1 a 16)', 3000);
         }
@@ -839,24 +857,23 @@ class DvrTvApp {
         var fsView = document.getElementById('fullscreen-view');
         if (fsView) fsView.style.display = 'flex';
 
-        var chId = channel.id < 10 ? '0' + channel.id : channel.id;
         var titleEl = document.getElementById('fs-cam-title');
         var badgeEl = document.getElementById('fs-cam-badge');
         if (titleEl) {
-            titleEl.textContent = 'CH' + chId + ' • ' + channel.name;
+            titleEl.textContent = channel.name + ' (CH ' + channel.id + ')';
         }
         if (badgeEl) {
             if (this.streamQuality === 1) {
-                badgeEl.textContent = 'HD';
+                badgeEl.textContent = '● HD';
                 badgeEl.className = 'fs-quality-badge quality-hd';
             } else {
-                badgeEl.textContent = 'Fluido';
+                badgeEl.textContent = '● Fluido';
                 badgeEl.className = 'fs-quality-badge quality-fluido';
             }
         }
 
         this.player.play(channel.id, this.streamQuality);
-        this.showToast('CH' + chId + ' • ' + channel.name, 1500);
+        this.showToast(channel.name + ' (CH ' + channel.id + ')', 1500);
     }
 
     closeFullScreen() {
