@@ -28,6 +28,11 @@ class DvrTvApp {
         this.settingsFocusedIndex = 0;
         this.resetPasswordPending = null;
 
+        // Buffer para troca direta de canais com teclas numéricas (0-9)
+        this.channelInputBuffer = '';
+        this.channelInputTimer = null;
+        this.lastBackPressTime = 0;
+
         this.gridRefreshTimer = null;
         this.player = null;
         this.remote = null;
@@ -260,6 +265,7 @@ class DvrTvApp {
             document.activeElement.blur();
         }
 
+        this.isHeaderFocused = false;
         this.updateCardFocus();
     }
 
@@ -416,7 +422,12 @@ class DvrTvApp {
             this.navigateSettings('up');
             return;
         }
-        if (this.isFullScreen) return;
+
+        // Em tela cheia, seta Cima ou Esquerda troca para a câmera anterior
+        if (this.isFullScreen) {
+            this.prevCamera();
+            return;
+        }
 
         var visibleChannels = this.getVisibleChannels();
         var cols = this.getGridColumns();
@@ -435,7 +446,12 @@ class DvrTvApp {
             this.navigateSettings('down');
             return;
         }
-        if (this.isFullScreen) return;
+
+        // Em tela cheia, seta Baixo ou Direita troca para a próxima câmera
+        if (this.isFullScreen) {
+            this.nextCamera();
+            return;
+        }
 
         if (this.isHeaderFocused) {
             this.isHeaderFocused = false;
@@ -453,7 +469,13 @@ class DvrTvApp {
 
     handleLeft() {
         if (this.isSettingsOpen) return;
-        if (this.isFullScreen) return;
+
+        // Em tela cheia, seta Esquerda vai para a câmera anterior
+        if (this.isFullScreen) {
+            this.prevCamera();
+            return;
+        }
+
         if (this.isHeaderFocused) return;
 
         var visibleChannels = this.getVisibleChannels();
@@ -465,7 +487,13 @@ class DvrTvApp {
 
     handleRight() {
         if (this.isSettingsOpen) return;
-        if (this.isFullScreen) return;
+
+        // Em tela cheia, seta Direita vai para a próxima câmera
+        if (this.isFullScreen) {
+            this.nextCamera();
+            return;
+        }
+
         if (this.isHeaderFocused) return;
 
         var visibleChannels = this.getVisibleChannels();
@@ -498,27 +526,36 @@ class DvrTvApp {
     }
 
     handleBack() {
+        console.log('[App] Botão VOLTAR acionado. isSettingsOpen:', this.isSettingsOpen, 'isFullScreen:', this.isFullScreen);
+
+        // 1. Se o Modal de Configurações estiver aberto: apenas fecha o modal e retorna para a grade
         if (this.isSettingsOpen) {
             this.closeSettings();
             return;
         }
 
+        // 2. Se estiver em Tela Cheia (visualizando câmera individual):
+        // Retorna imediatamente para a grade de 16 câmeras sem fechar o app!
         if (this.isFullScreen) {
             this.closeFullScreen();
             return;
         }
 
-        // Sair do app na Smart TV
-        if (window.webOS && window.webOS.platformBack) {
+        // 3. Se estiver na Grade principal:
+        // Exige 2 cliques dentro de 2.5 segundos para evitar fechar o app acidentalmente
+        var now = Date.now();
+        if (!this.lastBackPressTime || (now - this.lastBackPressTime > 2500)) {
+            this.lastBackPressTime = now;
+            this.showToast('Pressione VOLTAR novamente para sair do aplicativo', 2500);
+            return;
+        }
+
+        // Se pressionou pela 2ª vez dentro de 2.5s, aí sim fecha o app na TV
+        console.log('[App] Fechando o aplicativo por comando do usuário...');
+        if (window.webOS && typeof window.webOS.platformBack === 'function') {
             window.webOS.platformBack();
-        } else if (typeof window.tizen !== 'undefined') {
-            try {
-                window.tizen.application.getCurrentApplication().exit();
-            } catch (e) {
-                console.log('Saindo do app...');
-            }
         } else {
-            console.log('[App] Retornar acionado na tela principal');
+            window.close();
         }
     }
 
@@ -564,24 +601,88 @@ class DvrTvApp {
         }
     }
 
-    handleNumber(num) {
+    // =========================================================================
+    // Troca Direta de Canais com Teclas Numéricas (0-9)
+    // Suporta canais de 1 a 16 (ex: digitar 1 depois 2 = Canal 12)
+    // =========================================================================
+    showChannelIndicator(buffer) {
+        var osd = document.getElementById('channel-osd');
+        var numEl = document.getElementById('osd-number');
+        if (!osd || !numEl) return;
+
+        numEl.textContent = (buffer.length === 1) ? (buffer + '_') : buffer;
+        osd.style.display = 'flex';
+    }
+
+    hideChannelIndicator() {
+        var osd = document.getElementById('channel-osd');
+        if (osd) {
+            osd.style.display = 'none';
+        }
+    }
+
+    handleNumber(digit) {
         if (this.isSettingsOpen) return;
-        if (num === 0) num = 10;
+
+        var self = this;
+        if (this.channelInputTimer) {
+            clearTimeout(this.channelInputTimer);
+            this.channelInputTimer = null;
+        }
+
+        this.channelInputBuffer = (this.channelInputBuffer || '') + digit.toString();
+        console.log('[App] Tecla numérica:', digit, 'Buffer:', this.channelInputBuffer);
+
+        this.showChannelIndicator(this.channelInputBuffer);
+
+        // Se digitou 2 números (ex: 01, 05, 12, 16), executa na hora sem esperar!
+        if (this.channelInputBuffer.length >= 2) {
+            var buf = this.channelInputBuffer;
+            this.channelInputBuffer = '';
+            this.executeChannelSwitch(buf);
+            return;
+        }
+
+        // Se digitou apenas 1 dígito (ex: "1" ou "5"):
+        // Espera 1.2 segundos para ver se o usuário vai digitar o 2º dígito (ex: para canal 11 a 16)
+        this.channelInputTimer = setTimeout(function() {
+            var singleBuf = self.channelInputBuffer;
+            self.channelInputBuffer = '';
+            self.executeChannelSwitch(singleBuf);
+        }, 1200);
+    }
+
+    executeChannelSwitch(buffer) {
+        var channelNum = parseInt(buffer, 10);
+        this.hideChannelIndicator();
+
+        if (isNaN(channelNum) || channelNum <= 0) {
+            return;
+        }
+
+        console.log('[App] Executando troca para o Canal:', channelNum);
+
+        // Localiza a câmera com o número informado
         var target = null;
         for (var i = 0; i < this.channels.length; i++) {
-            if (this.channels[i].id === num) {
+            if (this.channels[i].id === channelNum) {
                 target = this.channels[i];
                 break;
             }
         }
+
         if (target) {
             var visibleChannels = this.getVisibleChannels();
             var idx = visibleChannels.indexOf(target);
             if (idx !== -1) {
                 this.focusedIndex = idx;
+                this.isHeaderFocused = false;
                 this.updateCardFocus();
             }
             this.openFullScreen(target);
+            this.showToast('Canal ' + (channelNum < 10 ? '0' + channelNum : channelNum) + ' • ' + target.name, 2500);
+        } else {
+            this.showToast('Canal ' + channelNum + ' não disponível (Canais: 1 a 16)', 3000);
         }
     }
 
@@ -651,8 +752,27 @@ class DvrTvApp {
                 self.openFullScreen(channel);
             });
 
+            // Sincroniza o ponteiro do Magic Remote com o sistema de foco
+            card.addEventListener('mouseenter', function() {
+                if (!self.isFullScreen && !self.isSettingsOpen) {
+                    self.focusedIndex = index;
+                    self.isHeaderFocused = false;
+                    self.updateCardFocus();
+                }
+            });
+
+            card.addEventListener('focus', function() {
+                if (!self.isFullScreen && !self.isSettingsOpen && (self.focusedIndex !== index || self.isHeaderFocused)) {
+                    self.focusedIndex = index;
+                    self.isHeaderFocused = false;
+                    self.updateCardFocus();
+                }
+            });
+
             grid.appendChild(card);
         });
+
+        this.updateCardFocus();
     }
 
     updateCardFocus() {
@@ -660,6 +780,7 @@ class DvrTvApp {
         if (btnSettings) {
             if (this.isHeaderFocused) {
                 btnSettings.classList.add('focused');
+                try { btnSettings.focus(); } catch (e) {}
             } else {
                 btnSettings.classList.remove('focused');
             }
@@ -670,6 +791,7 @@ class DvrTvApp {
         cards.forEach(function(card, idx) {
             if (idx === self.focusedIndex && !self.isHeaderFocused) {
                 card.classList.add('focused');
+                try { card.focus(); } catch (e) {}
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
                 card.classList.remove('focused');
@@ -728,6 +850,7 @@ class DvrTvApp {
 
         this.player.stop();
         this.renderGrid();
+        this.updateCardFocus();
     }
 
     nextCamera() {

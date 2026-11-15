@@ -53,9 +53,10 @@
             </div>
         </div>
         <div class="fs-overlay-footer">
-            <span><span class="fs-hint-key">OK / VOLTAR</span> Retornar à Grade</span>
-            <span><span class="fs-hint-key">CH ▲ / ▼</span> Trocar Câmera</span>
-            <span><span class="fs-hint-key">AMARELO</span> Alternar HD / Fluido</span>
+            <span><span class="fs-hint-key">VOLTAR</span> Retornar à Grade</span>
+            <span><span class="fs-hint-key">◄ ► ou ▲ ▼</span> Trocar Câmera</span>
+            <span><span class="fs-hint-key">0-9</span> Canal Direto (1 a 16)</span>
+            <span><span class="fs-hint-key">AMARELO</span> HD / Fluido</span>
         </div>
     </div>
 
@@ -147,6 +148,14 @@
             <span>Tela Cheia</span>
         </div>
         <div class="legend-item">
+            <span class="key-badge">VOLTAR</span>
+            <span>Grade / Sair</span>
+        </div>
+        <div class="legend-item">
+            <span class="key-badge">0-9</span>
+            <span>Canal Direto (1-16)</span>
+        </div>
+        <div class="legend-item">
             <span class="btn-pill red"></span>
             <span>Reconectar</span>
         </div>
@@ -162,11 +171,13 @@
             <span class="btn-pill blue"></span>
             <span>Configurações</span>
         </div>
-        <div class="legend-item">
-            <span class="key-badge">0-9</span>
-            <span>Canal Direto</span>
-        </div>
     </footer>
+
+    <!-- Indicador OSD de Canal Direto (Teclas 0-9) -->
+    <div id="channel-osd" class="channel-osd" style="display: none;">
+        <span class="osd-label">CANAL</span>
+        <span id="osd-number" class="osd-number">01</span>
+    </div>
 
     <!-- Toast de Notificação -->
     <div id="toast-notification" class="toast-notification"></div>

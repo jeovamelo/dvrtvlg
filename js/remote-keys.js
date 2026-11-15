@@ -28,130 +28,172 @@ class RemoteControlManager {
     }
 
     isInputActive() {
+        // Só considera input ativo se o modal de configurações estiver visível
+        var modal = document.getElementById('settings-modal');
+        var isModalVisible = modal && modal.style.display !== 'none';
+        if (!isModalVisible) return false;
+
         var active = document.activeElement;
         return active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
     }
 
     bindEvents() {
         var self = this;
+
+        // Previne o comportamento padrão de fechar o app no keyup do botão voltar do webOS
+        window.addEventListener('keyup', function(e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 461 || e.key === 'Back' || e.key === 'GoBack') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+
         window.addEventListener('keydown', function(e) {
-            var keyCode = e.keyCode;
+            var keyCode = e.keyCode || e.which;
+            var keyName = e.key;
             var inputActive = self.isInputActive();
 
-            // Quando o usuário está digitando em um campo de texto (ex: IP, senha, portas)
+            // Quando o usuário está digitando dentro de um input no modal
             if (inputActive) {
-                // Tecla Back / Esc: tira o foco do input ou fecha modal
-                if (keyCode === 461 || keyCode === 27 || keyCode === 10009) {
+                // Tecla Back / Esc: cancela/fecha input ou fecha modal
+                if (keyCode === 461 || keyCode === 27 || keyCode === 10009 || keyName === 'Escape' || keyName === 'Back') {
                     document.activeElement.blur();
                     if (self.callbacks.onBack) self.callbacks.onBack();
                     e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
 
-                // Enter no input: pode acionar Enter
-                if (keyCode === 13) {
+                // Enter no input
+                if (keyCode === 13 || keyName === 'Enter') {
                     if (self.callbacks.onEnter) self.callbacks.onEnter();
                     e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
 
-                // Seta Cima / Baixo: permite navegar para o próximo/anterior campo
-                if (keyCode === 38) {
+                // Seta Cima / Baixo: navega entre os campos
+                if (keyCode === 38 || keyName === 'ArrowUp') {
                     if (self.callbacks.onUp) self.callbacks.onUp();
                     e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
-                if (keyCode === 40) {
+                if (keyCode === 40 || keyName === 'ArrowDown') {
                     if (self.callbacks.onDown) self.callbacks.onDown();
                     e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
 
-                // Para qualquer outra tecla (letras, números 0-9, backspace, setas esquerda/direita),
-                // deixa o navegador/teclado nativo da TV processar normalmente!
+                // Deixa digitar texto, números e apagar com backspace dentro do input
                 return;
             }
 
-            // Navegação e atalhos normais fora de campos de input
-            switch (keyCode) {
-                case 38: // Seta Cima
-                    if (self.callbacks.onUp) self.callbacks.onUp();
-                    e.preventDefault();
-                    break;
-                case 40: // Seta Baixo
-                    if (self.callbacks.onDown) self.callbacks.onDown();
-                    e.preventDefault();
-                    break;
-                case 37: // Seta Esquerda
-                    if (self.callbacks.onLeft) self.callbacks.onLeft();
-                    e.preventDefault();
-                    break;
-                case 39: // Seta Direita
-                    if (self.callbacks.onRight) self.callbacks.onRight();
-                    e.preventDefault();
-                    break;
-
-                case 13: // Enter / OK
-                    if (self.callbacks.onEnter) self.callbacks.onEnter();
-                    e.preventDefault();
-                    break;
-
-                case 461:   // Botão Voltar (LG webOS TV Remote)
-                case 10009: // Botão Return (Samsung Tizen)
-                case 8:     // Backspace (PC)
-                case 27:    // Esc (PC)
-                    if (self.callbacks.onBack) self.callbacks.onBack();
-                    e.preventDefault();
-                    break;
-
-                // Tecla Vermelha / R no PC
-                case 403:
-                case 82:
-                    if (self.callbacks.onRed) self.callbacks.onRed();
-                    e.preventDefault();
-                    break;
-
-                // Tecla Verde / G no PC
-                case 404:
-                case 71:
-                    if (self.callbacks.onGreen) self.callbacks.onGreen();
-                    e.preventDefault();
-                    break;
-
-                // Tecla Amarela / Y no PC
-                case 405:
-                case 89:
-                    if (self.callbacks.onYellow) self.callbacks.onYellow();
-                    e.preventDefault();
-                    break;
-
-                // Tecla Azul / B no PC
-                case 406:
-                case 66:
-                    if (self.callbacks.onBlue) self.callbacks.onBlue();
-                    e.preventDefault();
-                    break;
-
-                case 427: // Channel Up / Page Up
-                case 33:
-                    if (self.callbacks.onChannelUp) self.callbacks.onChannelUp();
-                    e.preventDefault();
-                    break;
-                case 428: // Channel Down / Page Down
-                case 34:
-                    if (self.callbacks.onChannelDown) self.callbacks.onChannelDown();
-                    e.preventDefault();
-                    break;
-
-                default:
-                    // Números 0-9
-                    if (keyCode >= 48 && keyCode <= 57) {
-                        var num = keyCode - 48;
-                        if (self.callbacks.onNumber) self.callbacks.onNumber(num);
-                    }
-                    break;
+            // Tecla Voltar (Back no LG webOS, Return no Samsung, Esc ou Backspace no PC)
+            if (keyCode === 461 || keyCode === 10009 || keyCode === 27 || keyCode === 8 || keyName === 'Back' || keyName === 'GoBack' || keyName === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onBack) self.callbacks.onBack();
+                return;
             }
-        });
+
+            // Setas Direcionais (▲ ▼ ◄ ►)
+            if (keyCode === 38 || keyName === 'ArrowUp') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onUp) self.callbacks.onUp();
+                return;
+            }
+            if (keyCode === 40 || keyName === 'ArrowDown') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onDown) self.callbacks.onDown();
+                return;
+            }
+            if (keyCode === 37 || keyName === 'ArrowLeft') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onLeft) self.callbacks.onLeft();
+                return;
+            }
+            if (keyCode === 39 || keyName === 'ArrowRight') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onRight) self.callbacks.onRight();
+                return;
+            }
+
+            // OK / Enter
+            if (keyCode === 13 || keyName === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onEnter) self.callbacks.onEnter();
+                return;
+            }
+
+            // Teclas Numéricas (0-9) - Tanto teclado numérico padrão quanto numpad e e.key
+            var digit = -1;
+            if (keyCode >= 48 && keyCode <= 57) {
+                digit = keyCode - 48;
+            } else if (keyCode >= 96 && keyCode <= 105) {
+                digit = keyCode - 96;
+            } else if (typeof keyName === 'string' && keyName.length === 1 && keyName >= '0' && keyName <= '9') {
+                digit = parseInt(keyName, 10);
+            }
+
+            if (digit >= 0 && digit <= 9) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onNumber) self.callbacks.onNumber(digit);
+                return;
+            }
+
+            // Teclas Coloridas
+            // Vermelho (Red / R)
+            if (keyCode === 403 || keyCode === 82 || keyName === 'r' || keyName === 'R' || keyName === 'Red') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onRed) self.callbacks.onRed();
+                return;
+            }
+            // Verde (Green / G)
+            if (keyCode === 404 || keyCode === 71 || keyName === 'g' || keyName === 'G' || keyName === 'Green') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onGreen) self.callbacks.onGreen();
+                return;
+            }
+            // Amarelo (Yellow / Y)
+            if (keyCode === 405 || keyCode === 89 || keyName === 'y' || keyName === 'Y' || keyName === 'Yellow') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onYellow) self.callbacks.onYellow();
+                return;
+            }
+            // Azul (Blue / B)
+            if (keyCode === 406 || keyCode === 66 || keyName === 'b' || keyName === 'B' || keyName === 'Blue') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onBlue) self.callbacks.onBlue();
+                return;
+            }
+
+            // Canal Cima / Baixo (CH+ / CH- ou PageUp / PageDown)
+            if (keyCode === 427 || keyCode === 33 || keyName === 'ChannelUp' || keyName === 'PageUp') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onChannelUp) self.callbacks.onChannelUp();
+                return;
+            }
+            if (keyCode === 428 || keyCode === 34 || keyName === 'ChannelDown' || keyName === 'PageDown') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (self.callbacks.onChannelDown) self.callbacks.onChannelDown();
+                return;
+            }
+        }, true);
     }
 }
 

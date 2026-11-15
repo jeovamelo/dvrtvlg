@@ -9,6 +9,7 @@
   "largeIcon": "largeIcon.png",
   "resolution": "1920x1080",
   "bgColor": "#0b0f17",
+  "disableBackHistoryAPI": true,
   "supportGpu": true,
   "requiredPermissions": [
     "network"
