@@ -1,75 +1,59 @@
 @echo off
 chcp 65001 >nul
-title Instalador DVR TV - LG Smart TV (webOS)
+title Instalador DVR TV - LG Smart TVs (webOS)
 color 0B
 echo ========================================================
-echo   INSTALADOR AUTOMATICO DO DVR TV NA LG SMART TV
+echo   INSTALADOR AUTOMATICO DO DVR TV NAS SMART TVs LG
 echo ========================================================
 echo.
-echo TV configurada: lgtv (IP: 192.168.100.72)
+echo Escolha qual TV deseja instalar/atualizar:
+echo   [1] TV Cozinha (lgcozinha - 192.168.100.72)
+echo   [2] TV Suite   (lgsuite   - 192.168.100.70)
+echo   [3] Instalar em Ambas as TVs
 echo.
-echo [1/3] Removendo chave temporaria antiga (para evitar erro de senha)...
-if exist "%USERPROFILE%\.ssh\lgtv_webos" del /f /q "%USERPROFILE%\.ssh\lgtv_webos" >nul 2>&1
-echo       Concluido!
+set /p TV_CHOICE="Digite a opção (1, 2 ou 3) [Padrão: 1]: "
+
+if "%TV_CHOICE%"=="2" goto INSTALL_SUITE
+if "%TV_CHOICE%"=="3" goto INSTALL_BOTH
+goto INSTALL_COZINHA
+
+:INSTALL_COZINHA
 echo.
-echo [2/3] Autenticacao com a TV:
-echo       1. Olhe para a tela da TV no aplicativo Developer Mode.
-echo       2. Certifique-se de que a opcao 'Key Server' esta em ON.
-echo       3. Localize a Passphrase de 6 digitos exibida na tela.
-echo.
-set /p PASSPHRASE="Digite a Passphrase exatamente como esta na TV: "
-
-if "%PASSPHRASE%"=="" (
-    echo.
-    echo [ERRO] A Passphrase nao pode ser vazia!
-    pause
-    exit /b 1
-)
-
-echo.
-echo Conectando e obtendo chave SSH com a Passphrase %PASSPHRASE%...
-call npx -p @webos-tools/cli ares-novacom --getkey -d lgcozinha --passphrase %PASSPHRASE%
-
-if %ERRORLEVEL% NEQ 0 (
-    echo Tentando com o nome alternativo lgtv...
-    call npx -p @webos-tools/cli ares-novacom --getkey -d lgtv --passphrase %PASSPHRASE%
-)
-
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo ========================================================
-    echo [ERRO] Nao foi possivel autenticar com a TV.
-    echo  - Verifique se a Passphrase mudou na tela da TV.
-    echo  - Se tiver letras, digite MAIUSCULAS exatamente iguais.
-    echo  - Confirme se 'Key Server' ainda esta em ON na TV.
-    echo ========================================================
-    pause
-    exit /b 1
-)
-
-echo.
-echo [3/3] Instalando o aplicativo na TV LG...
+echo ========================================================
+echo   Instalando na TV Cozinha (lgcozinha - 192.168.100.72)
+echo ========================================================
 call npx -p @webos-tools/cli ares-install -d lgcozinha "%~dp0com.dvr.tv_1.0.0_all.ipk"
+call npx -p @webos-tools/cli ares-launch -d lgcozinha com.dvr.tv
+goto FINAL_MSG
 
-if %ERRORLEVEL% NEQ 0 (
-    call npx -p @webos-tools/cli ares-install -d lgtv "%~dp0com.dvr.tv_1.0.0_all.ipk"
-)
+:INSTALL_SUITE
+echo.
+echo ========================================================
+echo   Instalando na TV Suite (lgsuite - 192.168.100.70)
+echo ========================================================
+call npx -p @webos-tools/cli ares-install -d lgsuite "%~dp0com.dvr.tv_1.0.0_all.ipk"
+call npx -p @webos-tools/cli ares-launch -d lgsuite com.dvr.tv
+goto FINAL_MSG
 
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo [ERRO] Falha ao instalar o pacote na TV.
-    pause
-    exit /b 1
-)
+:INSTALL_BOTH
+echo.
+echo ========================================================
+echo   [1/2] Instalando na TV Cozinha (lgcozinha)...
+echo ========================================================
+call npx -p @webos-tools/cli ares-install -d lgcozinha "%~dp0com.dvr.tv_1.0.0_all.ipk"
+call npx -p @webos-tools/cli ares-launch -d lgcozinha com.dvr.tv
 
 echo.
 echo ========================================================
-echo  SUCESSO! DVR TV instalado com sucesso na sua TV LG!
+echo   [2/2] Instalando na TV Suite (lgsuite)...
 echo ========================================================
-echo.
-echo Abrindo o aplicativo na TV agora...
-call npx -p @webos-tools/cli ares-launch -d lgtv com.dvr.tv
+call npx -p @webos-tools/cli ares-install -d lgsuite "%~dp0com.dvr.tv_1.0.0_all.ipk"
+call npx -p @webos-tools/cli ares-launch -d lgsuite com.dvr.tv
+goto FINAL_MSG
 
+:FINAL_MSG
 echo.
-echo Pronto! O aplicativo ja esta na tela da sua TV.
+echo ========================================================
+echo  SUCESSO! O DVR TV foi instalado e iniciado com sucesso!
+echo ========================================================
 pause
