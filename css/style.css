@@ -399,10 +399,20 @@ html, body {
 .sc-action-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 12px;
     font-weight: 500;
     color: #94a3b8;
+}
+
+.sc-action-item .btn-pill.yellow {
+    width: 14px;
+    height: 14px;
+    background-color: #facc15;
+    box-shadow: 0 0 8px rgba(250, 204, 21, 0.7);
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 .fs-hint-key {
