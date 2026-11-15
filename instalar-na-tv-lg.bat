@@ -28,7 +28,12 @@ if "%PASSPHRASE%"=="" (
 
 echo.
 echo Conectando e obtendo chave SSH com a Passphrase %PASSPHRASE%...
-call npx -p @webos-tools/cli ares-novacom --getkey -d lgtv --passphrase %PASSPHRASE%
+call npx -p @webos-tools/cli ares-novacom --getkey -d lgcozinha --passphrase %PASSPHRASE%
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Tentando com o nome alternativo lgtv...
+    call npx -p @webos-tools/cli ares-novacom --getkey -d lgtv --passphrase %PASSPHRASE%
+)
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
@@ -44,7 +49,11 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo [3/3] Instalando o aplicativo na TV LG...
-call npx -p @webos-tools/cli ares-install -d lgtv "%~dp0com.dvr.tv_1.0.0_all.ipk"
+call npx -p @webos-tools/cli ares-install -d lgcozinha "%~dp0com.dvr.tv_1.0.0_all.ipk"
+
+if %ERRORLEVEL% NEQ 0 (
+    call npx -p @webos-tools/cli ares-install -d lgtv "%~dp0com.dvr.tv_1.0.0_all.ipk"
+)
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
