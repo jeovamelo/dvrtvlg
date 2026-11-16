@@ -1,0 +1,18 @@
+{
+  "id": "com.dvr.tv",
+  "version": "1.1.0",
+  "vendor": "Melo",
+  "type": "web",
+  "main": "index.html",
+  "title": "DVR TV",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "resolution": "1920x1080",
+  "bgColor": "#0b0f17",
+  "disableBackHistoryAPI": true,
+  "supportGpu": true,
+  "requiredPermissions": [
+    "network"
+  ],
+  "requiredACG": []
+}

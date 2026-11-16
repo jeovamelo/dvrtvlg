@@ -1,0 +1,2918 @@
+﻿/* ==========================================================================
+   DVR TV - Estilos para Samsung Smart TV e PC (1080p Nativo)
+   ========================================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0f17;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Superior */
+.app-header {
+    height: 56px;
+    min-height: 56px;
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(15, 20, 30, 0.9) 100%);
+    border-bottom: 2px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 10;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.app-logo {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+}
+
+.dvr-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #f8fafc;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 41, 59, 0.7);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #94a3b8;
+}
+
+.status-dot.connected {
+    background-color: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.status-dot.connecting {
+    background-color: #f59e0b;
+    animation: pulse 1s infinite alternate;
+}
+
+.status-dot.error {
+    background-color: #ef4444;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Botão de Configurações no Header */
+.btn-settings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #e2e8f0;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+}
+
+.btn-settings:hover, .btn-settings.focused {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #00d2ff;
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.85), inset 0 0 6px rgba(0, 210, 255, 0.4);
+    transform: scale(1.05);
+}
+
+.icon-gear {
+    font-size: 15px;
+}
+
+.clock-widget {
+    text-align: right;
+}
+
+.clock-time {
+    font-size: 22px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 1px;
+}
+
+.clock-date {
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: capitalize;
+}
+
+/* Área Principal (Grid de Câmeras) */
+.main-container {
+    flex: 1;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+}
+
+.camera-grid {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+}
+
+.camera-grid.layout-1x1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+.camera-grid.layout-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.camera-grid.layout-3x3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.camera-grid.layout-4x4 {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.camera-card {
+    background-color: #101622;
+    border-radius: 6px;
+    border: 2px solid #1e293b;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.camera-card.focused {
+    border: 3.5px solid #00f0ff !important;
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.95), inset 0 0 8px rgba(0, 240, 255, 0.5);
+    transform: scale(1.035);
+    z-index: 25;
+}
+
+.camera-card.focused .camera-overlay-top {
+    border-left: 3px solid #00f0ff;
+    background: rgba(0, 240, 255, 0.25);
+    backdrop-filter: blur(4px);
+}
+
+.camera-card.focused .cam-badge-id {
+    color: #ffffff;
+    background: #0284c7;
+    padding: 1px 5px;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(2, 132, 199, 0.8);
+}
+
+.card-video-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #05080f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+}
+
+.camera-overlay-top {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(3px);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border-left: 3px solid #0284c7;
+    pointer-events: none;
+}
+
+.cam-badge-id {
+    font-size: 11px;
+    font-weight: 800;
+    color: #38bdf8;
+}
+
+.cam-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.camera-overlay-bottom {
+    position: absolute;
+    bottom: 4px;
+    left: 6px;
+    right: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+
+.cam-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+}
+
+.cam-status.online {
+    background-color: rgba(16, 185, 129, 0.85);
+    color: #ffffff;
+}
+
+.cam-status.offline {
+    background-color: rgba(239, 68, 68, 0.85);
+    color: #ffffff;
+}
+
+.cam-res {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+/* Modo Visualização Individualizada (Estrutura Vertical: Vídeo Proporcional Acima, Menu Discreto Abaixo) */
+.fullscreen-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    z-index: 25;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.fullscreen-video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background-color: #000000 !important;
+    box-sizing: border-box !important;
+}
+
+.fullscreen-player-container {
+    position: relative !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #000000 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.avplay-fallback-img,
+.fullscreen-player-container object {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    object-fit: fill !important;
+    object-position: center center !important;
+    display: block !important;
+}
+
+/* Barra Inferior Discreta (Abaixo da imagem - NUNCA fica por cima do vídeo) */
+.fullscreen-bottom-bar {
+    height: 54px;
+    min-height: 54px;
+    background: linear-gradient(180deg, #0d1422 0%, #070b13 100%);
+    border-top: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.fs-bottom-left {
+    display: flex;
+    align-items: center;
+}
+
+.fs-cam-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.fs-cam-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: 0.3px;
+}
+
+.fs-quality-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    line-height: 1;
+}
+
+.fs-quality-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Cores Diferenciadas para Fluido e HD logo após a legenda */
+.fs-quality-tag.quality-fluido {
+    color: #10b981; /* Verde esmeralda */
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+}
+.fs-quality-tag.quality-fluido .fs-quality-dot {
+    background-color: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.fs-quality-tag.quality-hd {
+    color: #38bdf8; /* Azul ciano */
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+}
+.fs-quality-tag.quality-hd .fs-quality-dot {
+    background-color: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+}
+
+.fs-bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.fs-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.fs-hint-key {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #cbd5e1;
+    font-size: 11px;
+}
+
+.fs-hint-key.key-yellow {
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* Spinner de Buffering */
+.player-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 20px 32px;
+    border-radius: 10px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #38bdf8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   MODAL DE CONFIGURAÇÕES
+   ========================================================================== */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 8, 15, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.settings-card {
+    position: relative;
+    width: 720px;
+    max-width: 90vw;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(2, 132, 199, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.settings-header {
+    padding: 18px 24px;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settings-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.settings-icon {
+    font-size: 24px;
+}
+
+.settings-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #94a3b8;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    line-height: 1;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.btn-close-modal:hover, .btn-close-modal.focused {
+    color: #ffffff;
+    background: #ef4444;
+    border-color: #f87171;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.settings-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 72vh;
+    overflow-y: auto;
+}
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.form-input {
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 16px;
+    color: #ffffff;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.15s ease;
+}
+
+.ip-discovery-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.ip-discovery-row .form-input { flex: 1; }
+
+.btn-discover-dvr {
+    min-width: 150px;
+    border: 1px solid #38bdf8;
+    border-radius: 8px;
+    background: #075985;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-discover-dvr:focus,
+.btn-discover-dvr:hover { background: #0284c7; outline: 2px solid #67e8f9; }
+.btn-discover-dvr:disabled { opacity: 0.6; cursor: wait; }
+
+.form-input:focus, .form-input.focused {
+    border-color: #00d2ff;
+    background: #0b1329;
+    box-shadow: 0 0 14px rgba(0, 210, 255, 0.65);
+}
+
+.input-hint {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper .form-input {
+    width: 100%;
+    padding-right: 42px;
+}
+
+.password-lock-icon {
+    position: absolute;
+    right: 14px;
+    font-size: 16px;
+    color: #64748b;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Seção Avançada */
+.advanced-section {
+    background: #131c2e;
+    border: 1px dashed #334155;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 4px;
+}
+
+.btn-toggle-advanced {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.btn-toggle-advanced:hover, .btn-toggle-advanced.focused {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+.advanced-arrow {
+    font-size: 11px;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.advanced-arrow.open {
+    transform: rotate(90deg);
+}
+
+.advanced-fields {
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 10px;
+}
+
+.settings-footer {
+    padding: 18px 24px;
+    background: #111827;
+    border-top: 1px solid #1f2937;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-btn {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+}
+
+.modal-btn.btn-primary {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0369a1;
+}
+
+.modal-btn.btn-primary:hover, .modal-btn.btn-primary.focused {
+    background: #0369a1;
+    border-color: #00d2ff;
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.75);
+    transform: scale(1.02);
+}
+
+.modal-btn.btn-secondary {
+    background: #334155;
+    color: #e2e8f0;
+    border-color: #475569;
+}
+
+.modal-btn.btn-secondary:hover, .modal-btn.btn-secondary.focused {
+    background: #475569;
+    border-color: #94a3b8;
+    box-shadow: 0 0 12px rgba(148, 163, 184, 0.55);
+    transform: scale(1.02);
+}
+
+.modal-btn.btn-cancel {
+    background: transparent;
+    color: #94a3b8;
+    border-color: #334155;
+}
+
+.modal-btn.btn-cancel:hover, .modal-btn.btn-cancel.focused {
+    background: #1f2937;
+    color: #f1f5f9;
+    border-color: #64748b;
+    transform: scale(1.02);
+}
+
+/* Rodapé com Legenda do Controle Remoto Samsung */
+.remote-legend-footer {
+    height: 44px;
+    min-height: 44px;
+    background-color: #0f141f;
+    border-top: 2px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 0 20px;
+    z-index: 10;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #cbd5e1;
+}
+
+.btn-pill {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.btn-pill.red { background-color: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
+.btn-pill.green { background-color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
+.btn-pill.yellow { background-color: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.6); }
+.btn-pill.blue { background-color: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.6); }
+
+.key-badge {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+/* Toast de Notificação */
+.toast-notification {
+    position: fixed;
+    top: 70px;
+    right: 30px;
+    background: rgba(15, 23, 42, 0.95);
+    border-left: 4px solid #38bdf8;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transform: translateY(-40px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    z-index: 600;
+}
+
+.toast-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   NOVOS LAYOUTS DE GRADE QUADRADA E SLOTS VAZIOS (5x5 e 6x6)
+   ========================================================================== */
+.camera-grid.layout-5x5 {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.camera-grid.layout-6x6 {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 4px;
+}
+
+.camera-card.empty-slot {
+    background-color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    transform: none !important;
+}
+
+.camera-card.offline-card {
+    background-color: #000000;
+}
+.camera-card.offline-card .card-video-wrap {
+    background-color: #000000;
+}
+.camera-card.offline-card .cam-status.offline {
+    background: rgba(239, 68, 68, 0.25);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* ==========================================================================
+   TELA CHEIA REAL (SEM CABEÇALHO, SEM MENUS PERMANENTES)
+   ========================================================================== */
+.fs-toast-badge {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    padding: 8px 18px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 150;
+}
+
+.fs-toast-badge.show {
+    opacity: 1;
+}
+
+.fs-tag-fluido {
+    color: #10b981;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.fs-tag-hd {
+    color: #38bdf8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   MENU INFERIOR AUTO-OCULTÁVEL
+   ========================================================================== */
+.bottom-menu-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 58px;
+    background: linear-gradient(180deg, rgba(15, 20, 31, 0.95) 0%, rgba(10, 14, 22, 0.98) 100%);
+    border-top: 2px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.bottom-menu-bar.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.bottom-menu-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bar-action-btn {
+    background: #162032;
+    border: 1.5px solid #2d3b55;
+    color: #f1f5f9;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.bar-action-btn:focus,
+.bar-action-btn.focused {
+    border-color: #00f0ff !important;
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8) !important;
+    transform: scale(1.06);
+    z-index: 55;
+}
+
+.bar-shortcut {
+    font-size: 10px;
+    background: #0b0f17;
+    color: #94a3b8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+}
+
+.bottom-menu-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+/* ==========================================================================
+   MENU DE NAVEGAÇÃO ESTILO NETFLIX (DRAWER LATERAL)
+   ========================================================================== */
+.netflix-drawer-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 500;
+    display: none;
+    pointer-events: auto;
+}
+
+.drawer-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(3, 7, 18, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.netflix-drawer {
+    position: relative;
+    width: 440px;
+    max-width: 85vw;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(9, 14, 26, 0.98) 100%);
+    border-right: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 25px 0 60px rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px;
+    z-index: 510;
+    animation: drawerSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+@keyframes drawerSlideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0.8;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.drawer-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    margin-bottom: 20px;
+}
+
+.drawer-logo-badge {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    padding: 8px 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 16px rgba(2, 132, 199, 0.6);
+}
+
+.drawer-header-text h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.drawer-header-text span {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 3px;
+    display: block;
+}
+
+.drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.drawer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    margin-bottom: 4px;
+    padding: 8px;
+}
+
+.drawer-logo img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 10px;
+    filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.35));
+}
+
+#bottom-menu-bar {
+    display: none !important;
+}
+
+.drawer-item {
+    background: rgba(30, 41, 59, 0.45);
+    border: 2px solid transparent;
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #e2e8f0;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.drawer-item:focus,
+.drawer-item.focused {
+    border-color: #38bdf8 !important;
+    border-left: 6px solid #00f0ff !important;
+    background: linear-gradient(90deg, rgba(14, 165, 233, 0.28) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.45), inset 0 0 12px rgba(56, 189, 248, 0.2) !important;
+    transform: translateX(10px) scale(1.02);
+    color: #ffffff !important;
+}
+
+.drawer-item-icon {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drawer-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-item-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.drawer-item-desc {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+
+.drawer-badge {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 14px;
+    box-shadow: 0 0 8px rgba(2, 132, 199, 0.5);
+}
+
+.drawer-item-exit {
+    margin-top: auto;
+    border-top: 1px solid rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.12);
+    border-left: 4px solid rgba(239, 68, 68, 0.4);
+}
+
+.drawer-item-exit:focus,
+.drawer-item-exit.focused {
+    background: rgba(239, 68, 68, 0.35) !important;
+    border-left: 6px solid #ef4444 !important;
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.6) !important;
+}
+
+.drawer-footer {
+    padding-top: 18px;
+    border-top: 1px solid rgba(56, 189, 248, 0.15);
+    margin-top: 12px;
+    font-size: 12px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+/* ==========================================================================\n+   DVR TV - CAMADA VISUAL APROVADA\n+   Primeiro acesso sem câmeras, trilho lateral compacto e sem menu inferior.\n+   ========================================================================== */
+.app-logo-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #08bce9;
+    box-shadow: none;
+}
+
+.brand-lens-mark {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e8fbff;
+    border-radius: 50%;
+}
+
+.brand-lens-mark:after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    left: 6px;
+    top: 6px;
+    border-radius: 50%;
+    background: #f0444b;
+}
+
+.brand-lens-mark:before {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 13px;
+    right: -4px;
+    top: 2px;
+    border-right: 3px solid #e8fbff;
+    border-radius: 50%;
+}
+
+.onboarding-active .app-header,
+.onboarding-active .main-container,
+.onboarding-active .netflix-drawer-wrap,
+.onboarding-active .bottom-menu-bar {
+    visibility: hidden;
+}
+
+/* ==========================================================================
+   TELA INICIAL DE BOAS-VINDAS / ONBOARDING (FIEL AO ANEXO 2 - 100% COMPATÍVEL COM TIZEN / CHROMIUM 69)
+   Sem inset, sem clamp, sem flex gap - perfeitamente centralizado e proporcional na TV 1080p/4K
+   ========================================================================== */
+.onboarding-screen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 550 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #080e18 radial-gradient(circle at 50% 45%, rgba(14, 116, 144, 0.25), transparent 70%) !important;
+    color: #f8fafc !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.onboarding-screen.onboarding-hidden {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.onboarding-content-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 1300px !important;
+    margin: auto !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+.onboarding-main-title {
+    font-size: 54px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin: 0 0 14px 0 !important;
+    letter-spacing: -0.5px !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7) !important;
+    line-height: 1.2 !important;
+}
+
+.onboarding-subtitle {
+    font-size: 26px !important;
+    font-weight: 500 !important;
+    color: #94a3b8 !important;
+    margin: 0 0 56px 0 !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1.3 !important;
+}
+
+.onboarding-options {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+.onboarding-option {
+    width: 460px !important;
+    min-width: 420px !important;
+    max-width: 480px !important;
+    height: 400px !important;
+    min-height: 380px !important;
+    margin: 0 32px !important;
+    padding: 44px 36px !important;
+    border: 2.5px solid rgba(148, 163, 184, 0.28) !important;
+    border-radius: 26px !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    backdrop-filter: blur(16px);
+    color: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    outline: none !important;
+    transition: all 0.22s ease !important;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55) !important;
+    box-sizing: border-box !important;
+}
+
+.onboarding-option:hover,
+.onboarding-option.is-focused,
+.onboarding-option:focus {
+    border-color: #22d3ee !important;
+    background: rgba(14, 46, 62, 0.92) !important;
+    box-shadow: 0 0 45px rgba(34, 211, 238, 0.45), inset 0 0 20px rgba(34, 211, 238, 0.2) !important;
+    transform: translateY(-4px) scale(1.03) !important;
+}
+
+.onboarding-icon-box {
+    width: 110px !important;
+    height: 110px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 24px !important;
+}
+
+.onboarding-svg-icon {
+    width: 84px !important;
+    height: 84px !important;
+    display: block !important;
+}
+
+.onboarding-option-title {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 12px !important;
+    display: block !important;
+    line-height: 1.2 !important;
+}
+
+.onboarding-option-desc {
+    font-size: 18px !important;
+    color: #94a3b8 !important;
+    line-height: 1.4 !important;
+    display: block !important;
+}
+
+@media (max-width: 900px) {
+    .onboarding-options {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .onboarding-option {
+        width: 90% !important;
+        min-width: 280px !important;
+        max-width: 440px !important;
+        height: auto !important;
+        min-height: 220px !important;
+        margin: 14px 0 !important;
+        padding: 28px 20px !important;
+    }
+    .onboarding-main-title { font-size: 36px !important; }
+    .onboarding-subtitle { font-size: 18px !important; margin-bottom: 28px !important; }
+    .onboarding-icon-box { width: 72px !important; height: 72px !important; margin-bottom: 14px !important; }
+    .onboarding-svg-icon { width: 56px !important; height: 56px !important; }
+    .onboarding-option-title { font-size: 22px !important; }
+    .onboarding-option-desc { font-size: 15px !important; }
+}
+/* ==========================================================================
+   MENU LATERAL: TRILHO RECOLHIDO (ANEXO 1) E EXPANDIDO COMPLETO (ANEXO 2)
+   ========================================================================== */
+.netflix-drawer-wrap {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: auto !important;
+    z-index: 500 !important;
+    display: flex !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+}
+
+.netflix-drawer-wrap.drawer-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.netflix-drawer-wrap .drawer-backdrop {
+    display: none !important;
+}
+
+.netflix-drawer {
+    width: 68px !important;
+    max-width: none !important;
+    height: 100vh !important;
+    background: rgba(9, 14, 23, 0.75) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    padding: 28px 10px !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+    transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease, box-shadow 0.28s ease !important;
+    overflow: hidden !important;
+    animation: none !important;
+}
+
+/* Quando o menu está selecionado / aberto (Anexo 2) ou no hover */
+.netflix-drawer-wrap.is-open .netflix-drawer {
+    width: 270px !important;
+    background: rgba(8, 14, 23, 0.90) !important;
+    border-right: 1px solid rgba(56, 189, 248, 0.28) !important;
+    box-shadow: 25px 0 60px rgba(0, 0, 0, 0.75) !important;
+}
+
+.drawer-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+.drawer-item {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 50px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    border: 1.5px solid transparent !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    outline: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    transform: none !important;
+}
+
+.drawer-item-icon {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    filter: none !important;
+}
+
+.drawer-item-icon svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke: #ffffff !important;
+    stroke-width: 2 !important;
+    fill: none !important;
+    display: block !important;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.drawer-item-title {
+    margin-left: 14px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    opacity: 0 !important;
+    transform: translateX(-10px) !important;
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    pointer-events: none !important;
+    display: block !important;
+}
+
+/* Revela os textos no menu selecionado (Anexo 2) */
+.netflix-drawer-wrap.is-open .drawer-item-title {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+/* Item Selecionado / Focado (Exato Estilo Anexo 2: Pílula Ciano com Brilho Suave) */
+.drawer-item:focus,
+.drawer-item.focused {
+    border: 1.5px solid #38bdf8 !important;
+    background: rgba(14, 116, 144, 0.42) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.2) !important;
+    color: #ffffff !important;
+    transform: none !important;
+}
+
+.drawer-item:focus .drawer-item-title,
+.drawer-item.focused .drawer-item-title {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.7) !important;
+}
+
+.drawer-item:focus .drawer-item-icon svg,
+.drawer-item.focused .drawer-item-icon svg {
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8)) !important;
+}
+
+/* Estado responsivo: a grade usa toda a tela recolhida e se adapta quando o menu abre. */
+.camera-grid {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    transition: width 0.28s ease, max-width 0.28s ease, margin-left 0.28s ease !important;
+}
+
+body.drawer-expanded .camera-grid,
+body:has(#netflix-drawer-wrap.is-open) .camera-grid {
+    width: calc(100vw - 270px) !important;
+    max-width: calc(100vw - 270px) !important;
+    margin-left: 270px !important;
+}
+
+.drawer-item-exit {
+    margin-top: auto !important;
+}
+
+.main-container { padding-left: 78px; }
+.app-header { padding-left: 102px; }
+
+/* ==========================================================================
+   MODAIS (QR CODE, AJUDA E CONFIGURAÇÕES)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* O QR Code precisa ficar acima do onboarding no primeiro acesso. */
+#qrcode-modal {
+    z-index: 700 !important;
+}
+
+/* No primeiro acesso, o QR Code ocupa a tela inteira em vez de aparecer como pop-up. */
+#qrcode-modal.qr-fullscreen-view {
+    z-index: 700 !important;
+    display: flex !important;
+    align-items: stretch;
+    justify-content: stretch;
+    background: #060b13;
+}
+
+#qrcode-modal.qr-fullscreen-view .modal-backdrop {
+    display: none;
+}
+
+#qrcode-modal.qr-fullscreen-view .modal-card {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    border: 0;
+    border-radius: 0;
+    background: #060b13;
+    box-shadow: none;
+}
+
+#qrcode-modal.qr-fullscreen-view .modal-header {
+    min-height: 72px;
+    padding: 0 48px;
+    background: #0b1421;
+    border-bottom: 1px solid rgba(125, 211, 252, .16);
+}
+
+#qrcode-modal.qr-fullscreen-view .modal-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#qrcode-modal.qr-fullscreen-view .qr-presentation {
+    width: min(900px, 82vw);
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 64px;
+    align-items: center;
+}
+
+#qrcode-modal.qr-fullscreen-view .qrcode-container {
+    width: 280px;
+    height: 280px;
+}
+
+#qrcode-modal.qr-fullscreen-view .qr-info-wrap h3 {
+    font-size: 30px;
+}
+
+#qrcode-modal.qr-fullscreen-view .qr-hint,
+#qrcode-modal.qr-fullscreen-view .qr-address-label,
+#qrcode-modal.qr-fullscreen-view .qr-notice {
+    font-size: 19px;
+}
+
+#qrcode-modal.qr-fullscreen-view .qr-address-url {
+    font-size: 25px;
+}
+
+#qrcode-modal.qr-fullscreen-view .modal-footer {
+    padding: 24px 48px;
+    background: #0b1421;
+    border-top: 1px solid rgba(125, 211, 252, .16);
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 8, 15, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.modal-card {
+    position: relative;
+    width: 720px;
+    max-width: 90vw;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(2, 132, 199, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 510;
+}
+
+.modal-header {
+    background-color: #1e293b;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #334155;
+}
+
+.modal-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-title-wrap h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.modal-icon {
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+.modal-footer {
+    background-color: #111827;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #1e293b;
+}
+
+/* Modal QR Code */
+.modal-qr-card {
+    width: 700px;
+}
+
+.qr-presentation {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.qrcode-container {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 212px;
+    min-height: 212px;
+}
+
+.qrcode-container canvas,
+.qrcode-container img {
+    display: block;
+}
+
+.qr-info-wrap {
+    flex: 1;
+}
+
+.qr-info-wrap h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.qr-hint {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.qr-address-box {
+    background: #131c2e;
+    border: 1px solid #2563eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+
+.qr-address-label {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.qr-address-url {
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 800;
+    color: #38bdf8;
+    word-break: break-all;
+}
+
+.qr-unavailable-message {
+    width: 240px;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #fff;
+    color: #172033;
+    border-radius: 12px;
+    padding: 24px;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.qr-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: #cbd5e1;
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+/* Modal Ajuda */
+.modal-help-card {
+    width: 760px;
+}
+
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.help-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #131c2e;
+    border: 1px solid #1e293b;
+    padding: 12px 14px;
+    border-radius: 8px;
+}
+
+.help-item strong {
+    display: block;
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.help-item p {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.3;
+}
+
+/* Select Form Input */
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+
+/* ==========================================================================
+   CABEÇALHO E RODAPÉ TRANSLÚCIDOS ESTILO NETFLIX COM AUTO-FADE
+   ========================================================================== */
+.app-header.overlay-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.45) 65%, rgba(0, 0, 0, 0) 100%) !important;
+    border: none !important;
+    border-bottom: none !important;
+    z-index: 600 !important;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 36px 0 92px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.app-header.overlay-header .header-left {
+    position: absolute;
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%);
+    justify-content: center;
+    text-align: center;
+}
+
+/* Mantém o título fora da área ocupada pelo menu expandido. */
+body.drawer-expanded .app-header.overlay-header {
+    padding-left: 300px;
+}
+
+body.drawer-expanded .app-header.overlay-header .header-left {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.app-header.overlay-header.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.app-logo-badge {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+}
+
+/* O título superior não repete a logo que já aparece no menu lateral. */
+.app-header .app-logo-badge {
+    display: none !important;
+}
+
+.connection-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.connection-status-pill .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.connection-status-pill .status-dot.online {
+    background-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+}
+
+.connection-status-pill .status-dot.connecting {
+    background-color: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.9);
+}
+
+.connection-status-pill .status-dot.offline {
+    background-color: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.9);
+}
+
+.status-label {
+    color: #f1f5f9;
+}
+
+.bandwidth-label {
+    color: #38bdf8;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.bottom-menu-bar.overlay-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 85px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 65%, rgba(0, 0, 0, 0) 100%) !important;
+    border: none !important;
+    border-top: none !important;
+    z-index: 60 !important;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 36px 18px 36px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.bottom-menu-bar.overlay-footer.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   ENQUADRAMENTO DA CÂMERA ÚNICA (1x1) E PROPORCIONALIDADE 16:9
+   ========================================================================== */
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    background-color: #000000;
+}
+
+.camera-grid {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.camera-grid.layout-1x1 {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr !important;
+    gap: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+.camera-grid.layout-1x1 .camera-card {
+    border: none !important;
+    border-radius: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.camera-grid.layout-1x1 .card-video-wrap {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #000000 !important;
+}
+
+.camera-grid.layout-1x1 .camera-img {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    margin: 0 !important;
+}
+
+.camera-grid.layout-1x1 .camera-overlay-top {
+    top: 24px;
+    left: 28px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 15px;
+}
+
+.camera-grid.layout-1x1 .camera-overlay-bottom {
+    display: none;
+}
+
+
+/* Tag de Qualidade em Linha (Modo 1x1 / Câmera Única) com Círculo Amarelo */
+.cam-quality-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(234, 179, 8, 0.5);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-left: 8px;
+}
+
+.quality-dot.yellow {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #eab308;
+    box-shadow: 0 0 6px #eab308;
+    display: inline-block;
+}
+
+
+/* Pill de Paginação Impeccable no Cabeçalho */
+.pagination-pill {
+    background: rgba(14, 165, 233, 0.25);
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    color: #38bdf8;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+/* ==========================================================================
+   MELHORIAS: AÇÕES DAS CONFIGURAÇÕES E MODAL DE LICENÇA (1080p TV)
+   ========================================================================== */
+.settings-actions-group {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.cfg-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+    border: 1.5px solid rgba(56, 189, 248, 0.3);
+    color: #f1f5f9;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+}
+
+.cfg-action-btn:hover,
+.cfg-action-btn.focused {
+    background: #0284c7;
+    border-color: #38bdf8;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+    transform: scale(1.02);
+}
+
+.cfg-action-btn.license-btn {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.3) 100%);
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #6ee7b7;
+}
+
+.cfg-action-btn.license-btn:hover,
+.cfg-action-btn.license-btn.focused {
+    background: #059669;
+    border-color: #34d399;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.8);
+}
+
+/* Modal de Licença */
+.modal-license-card {
+    max-width: 680px;
+    width: 90%;
+}
+
+.license-status-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    margin-bottom: 20px;
+}
+
+.license-status-banner.active {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.5);
+}
+
+.license-status-banner.pending {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.5);
+}
+
+.status-indicator-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+    flex-shrink: 0;
+}
+
+.license-status-banner.active .status-indicator-dot {
+    background-color: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-text-block strong {
+    display: block;
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 3px;
+}
+
+.status-text-block p {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.license-qr-wrap {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    background: #0b111d;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.license-info-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.license-info-details .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 6px;
+    font-size: 13px;
+}
+
+.license-info-details .info-label {
+    color: #94a3b8;
+}
+
+.license-info-details .info-value {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.license-info-details .code-highlight {
+    font-size: 18px;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 2px;
+    font-family: monospace;
+}
+
+.license-info-details .mono-text {
+    font-family: monospace;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.license-instruction {
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Regra estrita: Câmeras sem sinal e slots vazios são estritamente fundo preto */
+.camera-card.offline-card {
+    background-color: #000000 !important;
+    border: 2px solid transparent !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+.camera-card.offline-card .card-video-wrap {
+    background-color: #000000 !important;
+}
+
+.camera-card.empty-slot {
+    background-color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+}
+
+/* ==========================================================================
+   LOGO OFICIAL DVR TV E BANNERS DE FEEDBACK
+   ========================================================================== */
+.app-logo-badge {
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    display: block;
+}
+
+.drawer-logo-badge {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drawer-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    display: block;
+}
+
+.onboarding-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Banner de Status e Erros no Modal de Configurações */
+.cfg-status-banner {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cfg-status-banner.error {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+}
+
+.cfg-status-banner.loading {
+    background: rgba(14, 165, 233, 0.2);
+    border: 1px solid rgba(56, 189, 248, 0.6);
+    color: #bae6fd;
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.2);
+}
+
+.cfg-status-banner.success {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.6);
+    color: #86efac;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+/* Tela de Boas-vindas para TV sem DVR configurado */
+.camera-grid.unconfigured-grid {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: radial-gradient(circle at center, #0d1b2a 0%, #050b14 100%) !important;
+}
+
+.unconfigured-welcome-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 36px 44px;
+    text-align: center;
+    max-width: 680px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.welcome-logo-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 18px;
+    object-fit: cover;
+    margin: 0 auto 16px auto;
+    display: block;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.unconfigured-welcome-card h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+}
+
+.welcome-subtitle {
+    font-size: 15px;
+    color: #94a3b8;
+    margin: 0 0 28px 0;
+    line-height: 1.4;
+}
+
+.welcome-options-row {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+
+.welcome-option-card {
+    flex: 1;
+    background: #1e293b;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    text-align: center;
+}
+
+.welcome-option-card:focus,
+.welcome-option-card.focused {
+    border-color: #00f0ff;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.5);
+    transform: scale(1.03);
+    background: #16243b;
+}
+
+.welcome-card-icon {
+    font-size: 32px;
+}
+
+.welcome-card-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0 0 4px 0;
+}
+
+.welcome-card-info span {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.3;
+    display: block;
+}
+
+.welcome-card-badge {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.6);
+    color: #10b981;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   CONFIGURAÇÕES EM PÁGINA INTEIRA (SEM POP-UP, SEM TRUNCAÇÃO, RESPONSIVO)
+   ========================================================================== */
+.settings-full-page-view {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 600 !important;
+    background: #060b13 !important;
+    display: none !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.settings-full-page-view.is-open {
+    display: flex !important;
+}
+
+@media (min-width: 901px) {
+    .settings-panel-card:nth-child(3) {
+        grid-column: 1 / -1;
+    }
+}
+
+.settings-full-page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.settings-full-header {
+    height: 72px;
+    min-height: 72px;
+    padding: 0 40px;
+    background: rgba(13, 20, 32, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(16px);
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.settings-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.settings-brand-stack {
+    width: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 0 0 58px;
+}
+
+.settings-header-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
+    display: block;
+}
+
+.lg-platform-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    color: #ffffff;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.lg-platform-mark {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #e31b23;
+}
+
+.lg-platform-os {
+    font-size: 7px;
+    font-weight: 700;
+    color: #cbd5e1;
+    letter-spacing: 0.2px;
+}
+
+.settings-header-titles h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+.settings-header-titles span {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 2px;
+    display: block;
+}
+
+.settings-header-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.settings-header-back-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.settings-header-back-btn:focus,
+.settings-header-back-btn:hover {
+    border-color: #38bdf8;
+    background: #0284c7;
+    box-shadow: 0 0 16px rgba(2, 132, 199, 0.6);
+    color: #ffffff;
+}
+
+.settings-full-body {
+    flex: 1;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 28px 40px 100px 40px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.settings-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.settings-panel-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 16px;
+    padding: 24px 26px;
+    box-sizing: border-box;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.panel-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel-card-icon {
+    font-size: 26px;
+}
+
+.panel-card-header h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.panel-card-header p {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 2px 0 0 0;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.form-field-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-row-duo {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.btn-toggle-pwd {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    outline: none;
+}
+
+.settings-action-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-action-tile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: #1e293b;
+    border: 1.5px solid transparent;
+    border-radius: 12px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.settings-action-tile:focus,
+.settings-action-tile:hover {
+    border-color: #00f0ff;
+    background: #16243b;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    transform: translateX(4px);
+}
+
+.settings-action-tile .tile-icon {
+    font-size: 24px;
+}
+
+.settings-action-tile .tile-info strong {
+    font-size: 15px;
+    display: block;
+    color: #ffffff;
+}
+
+.settings-action-tile .tile-info span {
+    font-size: 12px;
+    color: #94a3b8;
+    display: block;
+    margin-top: 2px;
+}
+
+.tile-license {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: rgba(56, 189, 248, 0.25);
+}
+
+.settings-full-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 72px;
+    min-height: 72px;
+    background: rgba(9, 14, 23, 0.98);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-sizing: border-box;
+    z-index: 20;
+}
+
+.footer-action-right {
+    display: flex;
+    gap: 16px;
+}
+
+.settings-footer-btn {
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-navigation-hint {
+    flex: 1;
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    text-align: center;
+    padding: 10px 18px;
+}
+
+.settings-full-page-view .form-input.focused,
+.settings-full-page-view .btn-discover-dvr.focused,
+.settings-full-page-view .settings-footer-btn.focused {
+    outline: 3px solid #22d3ee !important;
+    outline-offset: 3px;
+    border-color: #67e8f9 !important;
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.75), inset 0 0 12px rgba(34, 211, 238, 0.18) !important;
+    transform: scale(1.015);
+}
+
+.settings-footer-btn.btn-primary {
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 0 18px rgba(2, 132, 199, 0.5);
+}
+
+.settings-footer-btn.btn-primary:focus,
+.settings-footer-btn.btn-primary:hover {
+    background: #00f0ff;
+    color: #060b13;
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.8);
+}
+
+.settings-footer-btn.btn-secondary {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+}
+
+.settings-footer-btn.btn-secondary:focus,
+.settings-footer-btn.btn-secondary:hover {
+    border-color: #38bdf8;
+    color: #ffffff;
+}
+
+.settings-footer-btn.btn-cancel {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid transparent;
+}
+
+.settings-footer-btn.btn-cancel:focus,
+.settings-footer-btn.btn-cancel:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+@media (max-width: 900px) {
+    .settings-grid-layout {
+        grid-template-columns: 1fr;
+    }
+    .form-row-duo {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .settings-full-header,
+    .settings-full-footer,
+    .settings-full-body {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

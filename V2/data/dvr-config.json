@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "algorithm": "aes-256-gcm",
+  "iv": "pRhoKCbOfOI54SWs",
+  "tag": "eQE62rpy+62KjSv12TuNuA==",
+  "data": "u41E1Xao6fW9R7fTuoEhhNm2ApaALp4kptxgDHf6F66p1El/y8I1vPHPkSFTej3fXaUI4f1XSurCXj3qjOGFCuShkceHDGUROhGi/GeXWrN42E2XJyKEBgd5l9w=",
+  "updatedAt": "2026-11-15T20:38:34.386Z"
+}
